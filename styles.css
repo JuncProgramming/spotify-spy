@@ -50,6 +50,18 @@ button:hover {
   background: #00000000;
 }
 
+.play-btn, .play-btn:hover {
+  padding: 0;
+  font-size: 1rem;
+  background: #00000000;
+}
+
+.play-icon, .play-icon:hover {
+  scale: 1.0;
+  vertical-align: middle;
+  color: #f5f5f5;
+}
+
 i {
   transform-origin: center center;
   vertical-align: middle;
@@ -58,7 +70,7 @@ i {
 
 i:hover {
   scale: 1.05;
-  color: #dadada;
+  color: #e2e2e2;
 }
 
 .track-row {

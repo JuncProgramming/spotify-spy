@@ -44,9 +44,24 @@ function createTrackCard(track) {
   const row = document.createElement('div');
   row.classList.add('track-row');
 
+  const imgContainer = document.createElement('div');
+  imgContainer.style.position = 'relative';
+
   const img = document.createElement('img');
   img.src = track.album.images[2]?.url || track.album.images[0]?.url || '';
   img.alt = `${track.name} cover`;
+  img.style.display = 'block';
+
+  const play = document.createElement('button');
+  play.classList.add('play-btn');
+  play.style.visibility = 'hidden';
+  play.style.position = 'absolute';
+  play.style.top = '50%';
+  play.style.left = '50%';
+  play.style.transform = 'translate(-100%, -50%)';
+
+  const playIcon = document.createElement('i');
+  playIcon.classList.add('fa-solid', 'fa-play', 'play-icon');
 
   const info = document.createElement('div');
   info.classList.add('track-info');
@@ -77,22 +92,29 @@ function createTrackCard(track) {
   elipsisIcon.classList.add('fa-solid', 'fa-ellipsis');
   elipsisIcon.style.visibility = 'hidden';
 
+  play.appendChild(playIcon);
   save.appendChild(saveIcon);
   elipsis.appendChild(elipsisIcon);
-  row.appendChild(img);
+  imgContainer.appendChild(img);
+  imgContainer.appendChild(play);
+  row.appendChild(imgContainer);
   row.appendChild(info);
   row.appendChild(save);
   row.appendChild(duration);
   row.appendChild(elipsis);
-
+  
   row.addEventListener('mouseenter', () => {
     saveIcon.style.visibility = 'visible';
     elipsisIcon.style.visibility = 'visible';
+    img.style.opacity = '0.5';
+    play.style.visibility = 'visible';
   });
-
+  
   row.addEventListener('mouseleave', () => {
     saveIcon.style.visibility = 'hidden';
     elipsisIcon.style.visibility = 'hidden';
+    img.style.opacity = '1';
+    play.style.visibility = 'hidden';
   });
 
   return row;
