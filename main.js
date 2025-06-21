@@ -48,17 +48,19 @@ function createTrackCard(track) {
   imgContainer.style.position = 'relative';
 
   const img = document.createElement('img');
-  img.src = track.album.images[2]?.url || track.album.images[0]?.url || '';
-  img.alt = `${track.name} cover`;
+  img.src = track.album.images[2]?.url || './media/default-cover.png';
+  img.alt = track.name ? `${track.name} cover` : 'cover';
   img.style.display = 'block';
 
-  const play = document.createElement('button');
+  const play = document.createElement('a');
   play.classList.add('play-btn');
   play.style.visibility = 'hidden';
   play.style.position = 'absolute';
-  play.style.top = '50%';
-  play.style.left = '50%';
-  play.style.transform = 'translate(-100%, -50%)';
+  play.style.top = '45%';
+  play.style.left = '40%';
+  play.style.transform = 'translate(-50%, -50%)';
+  play.href = track.external_urls.spotify;
+  play.target = '_blank';
 
   const playIcon = document.createElement('i');
   playIcon.classList.add('fa-solid', 'fa-play', 'play-icon');
@@ -67,20 +69,44 @@ function createTrackCard(track) {
   info.classList.add('track-info');
 
   const title = document.createElement('h3');
-  title.textContent = track.name;
+  title.textContent = track.name || 'track name';
 
-  const artist = document.createElement('p');
-  artist.textContent = track.artists.map((a) => a.name).join(', ');
+  const artistsContainer = document.createElement('div');
+
+  track.artists.forEach((artist, index) => {
+    const artistText = document.createElement('a');
+    artistText.textContent = artist.name || 'artist';
+    artistText.href = artist.external_urls.spotify;
+    artistText.classList.add('artist');
+    artistsContainer.appendChild(artistText);
+
+    if (index < track.artists.length - 1) {
+      const comma = document.createElement('span');
+      comma.classList.add('comma');
+      comma.textContent = ',';
+      comma.style.color = '#bbbbbb';
+      artistsContainer.appendChild(comma);
+    }
+  });
 
   info.appendChild(title);
-  info.appendChild(artist);
+  info.appendChild(artistsContainer);
 
   const save = document.createElement('button');
   save.classList.add('save-btn');
 
   const saveIcon = document.createElement('i');
-  saveIcon.classList.add('fa-solid', 'fa-circle-plus');
+  saveIcon.classList.add('fa-solid', 'fa-circle-plus', 'scalable');
   saveIcon.style.visibility = 'hidden';
+
+  saveIcon.addEventListener('click', () => {
+    const isFavorite = saveIcon.classList.toggle('isFavorite');
+    if (isFavorite) {
+      saveIcon.classList.replace('fa-circle-plus', 'fa-circle-check');
+    } else {
+      saveIcon.classList.replace('fa-circle-check', 'fa-circle-plus');
+    }
+  });
 
   const duration = document.createElement('span');
   duration.textContent = convertMsToMinutes(track.duration_ms);
@@ -89,7 +115,7 @@ function createTrackCard(track) {
   elipsis.classList.add('elipsis-btn');
 
   const elipsisIcon = document.createElement('i');
-  elipsisIcon.classList.add('fa-solid', 'fa-ellipsis');
+  elipsisIcon.classList.add('fa-solid', 'fa-ellipsis', 'scalable');
   elipsisIcon.style.visibility = 'hidden';
 
   play.appendChild(playIcon);
@@ -102,14 +128,14 @@ function createTrackCard(track) {
   row.appendChild(save);
   row.appendChild(duration);
   row.appendChild(elipsis);
-  
+
   row.addEventListener('mouseenter', () => {
     saveIcon.style.visibility = 'visible';
     elipsisIcon.style.visibility = 'visible';
     img.style.opacity = '0.5';
     play.style.visibility = 'visible';
   });
-  
+
   row.addEventListener('mouseleave', () => {
     saveIcon.style.visibility = 'hidden';
     elipsisIcon.style.visibility = 'hidden';
@@ -123,6 +149,7 @@ function createTrackCard(track) {
 const onRowClick = () => {};
 
 function convertMsToMinutes(ms) {
+  if (!ms) return 'duration';
   const mins = Math.floor(ms / 60000);
   const secs = Math.floor((ms % 60000) / 1000);
   return `${mins}:${secs.toString().padStart(2, '0')}`;
