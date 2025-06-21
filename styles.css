@@ -7,7 +7,7 @@ body {
   align-items: center;
   justify-content: start;
   min-height: 100vh;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 h1 {
@@ -21,7 +21,7 @@ input {
   border: none;
   border-radius: 5px;
   width: 250px;
-  margin-right: 1rem;
+  margin-right: 0.75rem;
 }
 
 button {
@@ -38,39 +38,47 @@ button:hover {
   background: #1ed760;
 }
 
-.elipsis-btn, .elipsis-btn:hover {
+.elipsis-btn,
+.elipsis-btn:hover {
   padding: 0 0.5rem 0 0;
   font-size: 1rem;
   background: #00000000;
 }
 
-.save-btn, .save-btn:hover {
+.save-btn,
+.save-btn:hover {
   padding: 0 2rem 0 0;
   font-size: 1rem;
   background: #00000000;
 }
 
-.play-btn, .play-btn:hover {
-  padding: 0;
-  font-size: 1rem;
-  background: #00000000;
-}
-
-.play-icon, .play-icon:hover {
-  scale: 1.0;
-  vertical-align: middle;
+.play-icon,
+.play-icon:hover {
   color: #f5f5f5;
 }
 
 i {
-  transform-origin: center center;
   vertical-align: middle;
-  color:#cacaca;
+  color: #cacaca;
 }
 
-i:hover {
+.scalable:hover {
   scale: 1.05;
   color: #e2e2e2;
+}
+
+.isFavorite {
+  color: #1ed760;
+}
+
+.isFavorite:hover {
+  color: #1ed760;
+}
+
+.track-row span.comma {
+  display: inline-block;
+  color: #bbbbbb;
+  margin: 0 4px 0 0;
 }
 
 .track-row {
@@ -117,13 +125,14 @@ i:hover {
 }
 
 .track-row a {
-  color: #1db954;
+  color: #bbbbbb;
   text-decoration: none;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 .track-row a:hover {
-  color: #1ed760;
+  color: #fff;
+  text-decoration: underline;
 }
 
 #tracks-container {
@@ -131,5 +140,5 @@ i:hover {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin: 1rem 0;
+  margin: 1.5rem 0;
 }
