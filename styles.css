@@ -1,6 +1,15 @@
+:root {
+  --primary-green: #1db954;
+  --hover-green: #1ed760;
+  --light-bg: #333;
+  --dark-bg: #151515;
+  --light-text: #ffffff;
+  --muted-text: #b3b3b3;
+}
+
 body {
-  background: #121212;
-  color: #fff;
+  background: var(--dark-bg);
+  color: var(--light-text);
   font-family: 'Segoe UI', sans-serif;
   display: flex;
   flex-direction: column;
@@ -10,18 +19,34 @@ body {
   padding: 1rem;
 }
 
-h1 {
+#search-title {
+  position: relative;
+  left: -4px;
+  text-align: center;
   margin-bottom: 1rem;
-  color: #1db954;
+  color: var(--primary-green);
 }
 
-input {
-  padding: 0.75rem 1rem;
+#search {
+  display: block;
+  width: 250px;
+  max-width: 90%;
+  margin: 0.5rem auto;
+  padding: 0.6rem 1rem;
   font-size: 1rem;
   border: none;
-  border-radius: 5px;
-  width: 250px;
-  margin-right: 0.75rem;
+  border-radius: 9999px;
+  background: var(--light-bg);
+  color: var(--light-text);
+  outline: none;
+}
+
+input::placeholder {
+  color: var(--muted-text);
+}
+
+input:focus {
+  background: var(--light-bg);
 }
 
 button {
@@ -29,55 +54,75 @@ button {
   font-size: 1rem;
   border: none;
   border-radius: 5px;
-  background: #1db954;
-  color: #fff;
+  background: var(--primary-green);
+  color: var(--light-text);
   cursor: pointer;
 }
 
 button:hover {
-  background: #1ed760;
+  background: var(--hover-green);
 }
 
 .elipsis-btn,
 .elipsis-btn:hover {
   padding: 0 0.5rem 0 0;
   font-size: 1rem;
-  background: #00000000;
+  background: transparent;
 }
 
 .save-btn,
 .save-btn:hover {
   padding: 0 2rem 0 0;
   font-size: 1rem;
-  background: #00000000;
+  background: transparent;
 }
 
 .play-icon,
 .play-icon:hover {
-  color: #f5f5f5;
+  color: var(--light-text);
 }
 
 i {
   vertical-align: middle;
-  color: #cacaca;
+  color: var(--light-text);
 }
 
 .scalable:hover {
   scale: 1.05;
-  color: #e2e2e2;
+  color: var(--light-text);
 }
 
 .isFavorite {
-  color: #1ed760;
+  color: var(--hover-green);
 }
 
 .isFavorite:hover {
-  color: #1ed760;
+  color: var(--hover-green);
+}
+
+.save-btn i,
+.elipsis-btn i,
+.play-btn {
+  opacity: 0;
+}
+
+.cover-img {
+  opacity: 1;
+}
+
+.track-row:hover .save-btn i,
+.track-row:hover .elipsis-btn i,
+.track-row:hover .play-btn {
+  opacity: 1;
+}
+
+.track-row:hover .cover-img {
+  opacity: 0.5;
 }
 
 .track-row span.comma {
   display: inline-block;
-  color: #bbbbbb;
+  color: var(--muted-text);
   margin: 0 4px 0 0;
 }
 
@@ -92,7 +137,7 @@ i {
 }
 
 .track-row:hover {
-  background: #333;
+  background: var(--light-bg);
 }
 
 .track-row img {
@@ -114,24 +159,24 @@ i {
 .track-info p {
   margin: 0.2rem 0;
   font-size: 0.85rem;
-  color: #aaa;
+  color: var(--muted-text);
 }
 
 .track-row span {
   margin-right: 1rem;
   font-size: 0.9rem;
-  color: #ddd;
+  color: var(--muted-text);
   white-space: nowrap;
 }
 
 .track-row a {
-  color: #bbbbbb;
+  color: var(--muted-text);
   text-decoration: none;
   font-size: 1rem;
 }
 
 .track-row a:hover {
-  color: #fff;
+  color: var(--light-text);
   text-decoration: underline;
 }
 
@@ -141,4 +186,66 @@ i {
   align-items: center;
   width: 100%;
   margin: 1.5rem 0;
+}
+
+body.artist-page {
+  margin: 0;
+  padding: 0;
+}
+
+.artist-hero {
+  width: 100%;
+  background: linear-gradient(135deg, #1c1c1c, #121212);
+}
+
+.hero-inner {
+  display: flex;
+  align-items: flex-end;
+  gap: 2rem;
+  padding: 4rem 3rem 2rem 2rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.artist-hero-img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.artist-hero-info {
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.artist-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  margin: 0;
+  padding: 0;
+  line-height: normal;
+}
+
+.artist-verified i {
+  color: #247ec7;
+  font-size: 1.5em;
+}
+
+.artist-name {
+  padding: 0;
+  margin: 0;
+  color: var(--light-text);
+  font-size: 5rem;
+  font-weight: 900;
+}
+
+.artist-followers {
+  font-size: 1rem;
+  color: var(--light-text);
+  margin: 0.5rem 0 0 0;
 }
