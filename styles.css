@@ -3,35 +3,69 @@
   --hover-green: #1ed760;
   --light-bg: #333;
   --dark-bg: #151515;
+  --very-dark-bg: #000000;
   --light-text: #ffffff;
   --muted-text: #b3b3b3;
 }
 
 body {
-  background: var(--dark-bg);
+  background: var(--very-dark-bg);
   color: var(--light-text);
   font-family: 'Segoe UI', sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: start;
+  margin: 0;
+  padding: 0;
   min-height: 100vh;
-  padding: 1rem;
+}
+
+.spotify-card {
+  box-sizing: border-box;
+  border-radius: 1rem;
+  background-color: var(--dark-bg);
+  width: calc(100% - 2rem);
+  height: 100vh;
+  margin: 0 1rem 1rem 1rem;
+}
+
+.title-container {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  width: 100%;
+}
+
+h2 {
+  text-align: left;
+}
+
+#form {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  flex: 1;
 }
 
 #search-title {
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
   position: relative;
-  left: -4px;
   text-align: center;
-  margin-bottom: 1rem;
   color: var(--primary-green);
 }
 
 #search {
+  margin: 0 auto;
   display: block;
-  width: 250px;
-  max-width: 90%;
-  margin: 0.5rem auto;
+  max-width: 300px;
+  width: 100%;
   padding: 0.6rem 1rem;
   font-size: 1rem;
   border: none;
@@ -132,8 +166,7 @@ i {
   border-radius: 6px;
   padding: 0.75rem;
   margin: 0;
-  width: 100%;
-  max-width: 700px;
+  width: 700px;
 }
 
 .track-row:hover {
@@ -181,21 +214,27 @@ i {
 }
 
 #tracks-container {
+  align-items: flex-start;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  max-width: 700px;
   width: 100%;
-  margin: 1.5rem 0;
-}
-
-body.artist-page {
-  margin: 0;
-  padding: 0;
+  margin: 0 auto;
 }
 
 .artist-hero {
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
   width: 100%;
-  background: linear-gradient(135deg, #1c1c1c, #121212);
+  background: linear-gradient(
+      135deg,
+      rgba(28, 28, 28, 0.8),
+      rgba(18, 18, 18, 0.8)
+    ),
+    url('./media/default-cover.png');
+  background-size: cover;
+  background-position: center;
+  margin: 0;
 }
 
 .hero-inner {
@@ -225,7 +264,7 @@ body.artist-page {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
   margin: 0;
   padding: 0;
   line-height: normal;
