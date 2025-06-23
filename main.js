@@ -2,8 +2,7 @@ const state = {
   currentPage: window.location.pathname,
 };
 
-const tracksContainer = document.getElementById('tracks-container');
-const form = document.getElementById('form');
+const BASE_URL = 'https://api.spotify.com/v1/';
 
 async function getToken() {
   const res = await fetch('/.netlify/functions/getToken');
@@ -21,7 +20,7 @@ function createTrackCard(track) {
   const img = document.createElement('img');
   img.classList.add('cover-img');
   img.src = track.album.images[2]?.url || './media/default-cover.png';
-  img.alt = track.name ? `${track.name} cover` : 'cover';
+  img.alt = track.name ? `${track.name} cover` : 'Cover';
   img.style.display = 'block';
 
   const play = document.createElement('a');
@@ -104,6 +103,7 @@ function createTrackCard(track) {
 async function searchSong(e) {
   e.preventDefault();
 
+  const tracksContainer = document.getElementById('tracks-container');
   const searchField = document.getElementById('search');
   const query = searchField.value;
   const token = await getToken();
@@ -128,6 +128,10 @@ async function searchSong(e) {
     return;
   }
 
+  const tracksHeader = document.createElement('h2');
+  tracksHeader.textContent = 'Tracks';
+  tracksContainer.appendChild(tracksHeader);
+
   tracks.forEach((track) => {
     const card = createTrackCard(track);
     tracksContainer.appendChild(card);
@@ -135,11 +139,87 @@ async function searchSong(e) {
 }
 
 async function displayArtist() {
-  const params = new URLSearchParams(window.location.search)
+  const params = new URLSearchParams(window.location.search);
   const artistId = params.get('id');
-  console.log(artistId);
-}
 
+  const token = await getToken();
+  const res = await fetch(
+    `${BASE_URL}artists/${encodeURIComponent(artistId)}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const data = await res.json();
+
+  const spotifyCard = document.querySelector('.spotify-card');
+  console.log(spotifyCard);
+
+  const hero = document.createElement('div');
+  const bgImage = data.images?.[0]?.url;
+  hero.classList.add('artist-hero');
+  if (bgImage) {
+    hero.style.backgroundImage = `
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+    url(${bgImage})
+  `;
+  } else {
+    hero.style.backgroundImage = `
+    linear-gradient(135deg, #1c1c1c, #121212)
+  `;
+  }
+  hero.style.backgroundSize = 'cover';
+  hero.style.backgroundPosition = 'center';
+  hero.style.backgroundRepeat = 'no-repeat';
+
+  const heroInner = document.createElement('div');
+  heroInner.classList.add('hero-inner');
+
+  const image = document.createElement('img');
+  image.classList.add('artist-hero-img');
+  image.src = data.images[1]?.url || './media/default-cover.png';
+  image.alt = data.name ? `Picture of ${data.name}` : 'Artist picture';
+  image.loading = 'lazy';
+
+  const heroInfo = document.createElement('div');
+  heroInfo.classList.add('artist-hero-info');
+
+  const p = document.createElement('p');
+  p.classList.add('artist-verified');
+
+  const verifiedText = document.createTextNode('Verified artist');
+
+  const verifiedIcon = document.createElement('i');
+  verifiedIcon.classList.add('fa-solid', 'fa-certificate');
+
+  const name = document.createElement('h1');
+  name.classList.add('artist-name');
+  name.textContent = data.name;
+
+  const followers = document.createElement('p');
+  followers.classList.add('artist-followers');
+  followers.textContent = `${data.followers.total.toLocaleString()} listeners this month`;
+
+  const popularHeader = document.createElement('h2');
+  popularHeader.textContent = 'Popular';
+
+  p.appendChild(verifiedIcon);
+  p.append(verifiedText);
+
+  heroInfo.appendChild(p);
+  heroInfo.appendChild(name);
+  heroInfo.appendChild(followers);
+
+  heroInner.appendChild(image);
+  heroInner.appendChild(heroInfo);
+
+  hero.appendChild(heroInner);
+
+  spotifyCard.appendChild(hero);
+  spotifyCard.appendChild(popularHeader);
+}
 
 function convertMsToMinutes(ms) {
   if (!ms) return 'duration';
@@ -151,9 +231,11 @@ function convertMsToMinutes(ms) {
 const init = () => {
   const page = state.currentPage;
   if (page.endsWith('/') || page.endsWith('/index.html')) {
+    const form = document.getElementById('form');
+    if (!form) return;
     form.addEventListener('submit', searchSong);
   } else if (page.endsWith('/artist.html')) {
-    displayArtist()
+    displayArtist();
   } else {
     console.warn('Page not recognized:', page);
   }
