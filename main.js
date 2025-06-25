@@ -4,18 +4,39 @@ const state = {
 
 const BASE_URL = 'https://api.spotify.com/v1/';
 
-async function getToken() {
+const getToken = async () => {
   const res = await fetch('/.netlify/functions/getToken');
   const data = await res.json();
   return data.access_token;
-}
+};
 
-function createBestResultCard(track) {
+const convertMsToMinutes = (ms) => {
+  if (!ms) return 'duration';
+  const mins = Math.floor(ms / 60000);
+  const secs = Math.floor((ms % 60000) / 1000);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+};
+
+const showResultsView = () => {
+  const results = document.querySelector('.search-results');
+  const details = document.getElementById('popular-tracks-container');
+  if (results) results.style.display = 'flex';
+  if (details) details.style.display = 'none';
+};
+
+const showDetailsView = () => {
+  const results = document.querySelector('.search-results');
+  const details = document.getElementById('popular-tracks-container');
+  if (results) results.style.display = 'none';
+  if (details) details.style.display = 'flex';
+};
+
+const createBestResultCard = (track) => {
   const bestTrackRow = document.createElement('div');
   bestTrackRow.classList.add('best-track-card');
 
   const img = document.createElement('img');
-  img.classList.add('cover-img');
+  img.classList.add('cover-img', 'best-cover-img');
   img.src = track.album.images[0]?.url || './media/default-cover.png';
   img.alt = track.name ? `${track.name} cover` : 'Cover';
   img.style.display = 'block';
@@ -58,14 +79,13 @@ function createBestResultCard(track) {
 
   info.appendChild(title);
   info.appendChild(artistsContainer);
-
   bestTrackRow.appendChild(img);
   bestTrackRow.appendChild(info);
 
   return bestTrackRow;
-}
+};
 
-function createTrackCard(track, number = null) {
+const createTrackCard = (track, number = null) => {
   const row = document.createElement('div');
   row.classList.add('track-row');
 
@@ -121,9 +141,6 @@ function createTrackCard(track, number = null) {
     }
   });
 
-  info.appendChild(title);
-  info.appendChild(artistsContainer);
-
   const save = document.createElement('button');
   save.classList.add('save-btn');
 
@@ -148,6 +165,8 @@ function createTrackCard(track, number = null) {
   const elipsisIcon = document.createElement('i');
   elipsisIcon.classList.add('fa-solid', 'fa-ellipsis', 'scalable');
 
+  info.appendChild(title);
+  info.appendChild(artistsContainer);
   play.appendChild(playIcon);
   save.appendChild(saveIcon);
   elipsis.appendChild(elipsisIcon);
@@ -160,15 +179,132 @@ function createTrackCard(track, number = null) {
   row.appendChild(elipsis);
 
   return row;
-}
+};
 
-async function searchSong(e) {
+const createSearch = (tracks) => {
+  const spotifyCard = document.createElement('div');
+  spotifyCard.classList.add('spotify-card');
+
+  const searchResults = document.createElement('div');
+  searchResults.classList.add('search-results');
+
+  const bestTrackContainer = document.createElement('div');
+  bestTrackContainer.id = 'best-track-container';
+
+  const bestTrackHeader = document.createElement('h2');
+  bestTrackHeader.textContent = 'Best result';
+
+  const bestCard = createBestResultCard(tracks[0]);
+
+  const tracksContainer = document.createElement('div');
+  tracksContainer.id = 'tracks-container';
+
+  const tracksHeader = document.createElement('h2');
+  tracksHeader.textContent = 'Tracks';
+  tracksContainer.appendChild(tracksHeader);
+
+  tracks.forEach((track) => {
+    const card = createTrackCard(track);
+    tracksContainer.appendChild(card);
+  });
+
+  bestTrackContainer.appendChild(bestTrackHeader);
+  bestTrackContainer.appendChild(bestCard);
+  spotifyCard.appendChild(bestTrackContainer);
+  searchResults.appendChild(bestTrackContainer);
+  searchResults.appendChild(tracksContainer);
+  spotifyCard.appendChild(searchResults);
+
+  return spotifyCard;
+};
+
+const createArtist = (data, tracks = [], albums = []) => {
+  const spotifyCard = document.createElement('div');
+  spotifyCard.classList.add('spotify-card');
+
+  const hero = document.createElement('div');
+  const bgImage = data.images?.[0]?.url;
+  hero.classList.add('artist-hero');
+  if (bgImage) {
+    hero.style.backgroundImage = `
+      linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+      url(${bgImage})
+    `;
+  } else {
+    hero.style.backgroundImage = `
+      linear-gradient(135deg, #1c1c1c, #121212)
+    `;
+  }
+  hero.style.backgroundSize = 'cover';
+  hero.style.backgroundPosition = 'center';
+  hero.style.backgroundRepeat = 'no-repeat';
+
+  const heroInner = document.createElement('div');
+  heroInner.classList.add('hero-inner');
+
+  const image = document.createElement('img');
+  image.classList.add('artist-hero-img');
+  image.src = data.images?.[1]?.url || './media/default-cover.png';
+  image.alt = data.name ? `Picture of ${data.name}` : 'Artist picture';
+  image.loading = 'lazy';
+
+  const heroInfo = document.createElement('div');
+  heroInfo.classList.add('artist-hero-info');
+
+  const p = document.createElement('p');
+  p.classList.add('artist-verified');
+  const verifiedText = document.createTextNode('Verified artist');
+  const verifiedIcon = document.createElement('i');
+  verifiedIcon.classList.add('fa-solid', 'fa-certificate');
+
+  const name = document.createElement('h1');
+  name.classList.add('artist-name');
+  name.textContent = data.name;
+
+  const followers = document.createElement('p');
+  followers.classList.add('artist-followers');
+  followers.textContent = `${
+    data.followers?.total?.toLocaleString() ?? ''
+  } listeners this month`;
+
+  const popularHeader = document.createElement('h2');
+  popularHeader.textContent = 'Popular';
+
+  const popularTracksContainer = document.createElement('div');
+  popularTracksContainer.id = 'popular-tracks-container';
+  popularTracksContainer.appendChild(popularHeader);
+
+  tracks.forEach((track, index) => {
+    const card = createTrackCard(track, index + 1);
+    popularTracksContainer.appendChild(card);
+  });
+
+  p.appendChild(verifiedIcon);
+  p.append(verifiedText);
+  heroInfo.appendChild(p);
+  heroInfo.appendChild(name);
+  heroInfo.appendChild(followers);
+  heroInner.appendChild(image);
+  heroInner.appendChild(heroInfo);
+  hero.appendChild(heroInner);
+  spotifyCard.appendChild(hero);
+  spotifyCard.appendChild(popularTracksContainer);
+
+  return spotifyCard;
+};
+
+const displaySearch = async (e) => {
   e.preventDefault();
 
-  const tracksContainer = document.getElementById('tracks-container');
-  const bestTrackContainer = document.getElementById('best-track-container');
+  const main = document.querySelector('main');
+  main.innerHTML = '';
+
+  const sidebar = document.createElement('div');
+  sidebar.classList.add('sidebar');
+
   const searchField = document.getElementById('search');
   const query = searchField.value;
+
   const token = await getToken();
   const res = await fetch(
     `https://api.spotify.com/v1/search?q=${encodeURIComponent(
@@ -184,41 +320,26 @@ async function searchSong(e) {
   const data = await res.json();
   const tracks = data.tracks.items;
 
-  bestTrackContainer.innerHTML = '';
-  tracksContainer.innerHTML = '';
+  const content = createSearch(tracks);
 
-  if (tracks.length === 0) {
-    tracksContainer.textContent = 'No tracks found.';
-    return;
-  }
+  main.appendChild(sidebar);
+  main.appendChild(content);
 
-  const bestTrackHeader = document.createElement('h2');
-  bestTrackHeader.textContent = 'Best result';
-  bestTrackContainer.appendChild(bestTrackHeader);
+  showResultsView();
+};
 
-  const tracksHeader = document.createElement('h2');
-  tracksHeader.textContent = 'Tracks';
-  tracksContainer.appendChild(tracksHeader);
-
-  const bestCard = createBestResultCard(tracks[0]);
-  bestTrackContainer.appendChild(bestCard);
-
-  tracks.forEach((track) => {
-    const card = createTrackCard(track);
-    tracksContainer.appendChild(card);
-  });
-}
-
-async function displayArtist() {
-  const popularTracksContainer = document.getElementById(
-    'popular-tracks-container'
-  );
-
+const displayArtist = async () => {
   const params = new URLSearchParams(window.location.search);
   const artistId = params.get('id');
 
+  const main = document.querySelector('main');
+  main.innerHTML = '';
+
+  const sidebar = document.createElement('div');
+  sidebar.classList.add('sidebar');
+
   const token = await getToken();
-  const res = await fetch(
+  const artistRes = await fetch(
     `${BASE_URL}artists/${encodeURIComponent(artistId)}`,
     {
       headers: {
@@ -234,97 +355,36 @@ async function displayArtist() {
       },
     }
   );
+  const topAlbumsRes = await fetch(
+    `${BASE_URL}artists/${encodeURIComponent(artistId)}/albums?limit=5`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
-  const data = await res.json();
+  const artistData = await artistRes.json();
   const topTracksData = await topTracksRes.json();
+  const topAlbumsData = await topAlbumsRes.json();
+
   const tracks = topTracksData.tracks;
+  const albums = topAlbumsData.items;
 
-  const spotifyCard = document.querySelector('.spotify-card');
+  const content = createArtist(artistData, tracks, albums);
 
-  const hero = document.createElement('div');
-  const bgImage = data.images?.[0]?.url;
-  hero.classList.add('artist-hero');
-  if (bgImage) {
-    hero.style.backgroundImage = `
-    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-    url(${bgImage})
-  `;
-  } else {
-    hero.style.backgroundImage = `
-    linear-gradient(135deg, #1c1c1c, #121212)
-  `;
-  }
-  hero.style.backgroundSize = 'cover';
-  hero.style.backgroundPosition = 'center';
-  hero.style.backgroundRepeat = 'no-repeat';
-
-  const heroInner = document.createElement('div');
-  heroInner.classList.add('hero-inner');
-
-  const image = document.createElement('img');
-  image.classList.add('artist-hero-img');
-  image.src = data.images[1]?.url || './media/default-cover.png';
-  image.alt = data.name ? `Picture of ${data.name}` : 'Artist picture';
-  image.loading = 'lazy';
-
-  const heroInfo = document.createElement('div');
-  heroInfo.classList.add('artist-hero-info');
-
-  const p = document.createElement('p');
-  p.classList.add('artist-verified');
-
-  const verifiedText = document.createTextNode('Verified artist');
-
-  const verifiedIcon = document.createElement('i');
-  verifiedIcon.classList.add('fa-solid', 'fa-certificate');
-
-  const name = document.createElement('h1');
-  name.classList.add('artist-name');
-  name.textContent = data.name;
-
-  const followers = document.createElement('p');
-  followers.classList.add('artist-followers');
-  followers.textContent = `${data.followers.total.toLocaleString()} listeners this month`;
-
-  const popularHeader = document.createElement('h2');
-  popularHeader.textContent = 'Popular';
-
-  p.appendChild(verifiedIcon);
-  p.append(verifiedText);
-
-  heroInfo.appendChild(p);
-  heroInfo.appendChild(name);
-  heroInfo.appendChild(followers);
-
-  heroInner.appendChild(image);
-  heroInner.appendChild(heroInfo);
-
-  hero.appendChild(heroInner);
-
-  spotifyCard.appendChild(hero);
-  spotifyCard.appendChild(popularHeader);
-
-  popularTracksContainer.appendChild(popularHeader);
-  tracks.forEach((track, index) => {
-    const card = createTrackCard(track, index + 1);
-    popularTracksContainer.appendChild(card);
-  });
-  spotifyCard.appendChild(popularTracksContainer);
-}
-
-function convertMsToMinutes(ms) {
-  if (!ms) return 'duration';
-  const mins = Math.floor(ms / 60000);
-  const secs = Math.floor((ms % 60000) / 1000);
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
-}
+  main.appendChild(sidebar);
+  main.appendChild(content);
+};
 
 const init = () => {
   const form = document.getElementById('form');
   if (form) {
-    form.addEventListener('submit', searchSong);
+    form.addEventListener('submit', displaySearch);
+    if (state.currentPage.endsWith('/artist.html')) {
+      showDetailsView();
+    }
   }
-
   if (state.currentPage.endsWith('/artist.html')) {
     displayArtist();
   } else {
