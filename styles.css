@@ -6,6 +6,7 @@
   --very-dark-bg: #000000;
   --light-text: #ffffff;
   --muted-text: #b3b3b3;
+  --album-button: #a3a3a3;
 }
 
 html,
@@ -150,7 +151,7 @@ h2 {
 }
 
 .search-results {
-  display: flex;
+  display: none;
   justify-content: flex-start;
   align-items: flex-start;
   gap: 3rem;
@@ -231,9 +232,8 @@ h2 {
 }
 
 .best-track-card {
-  aspect-ratio: 2/1;
+  max-width: 20rem;
   width: 100%;
-  max-width: 31.25rem;
   background: #222;
   border-radius: 0.5rem;
   display: flex;
@@ -245,9 +245,9 @@ h2 {
 }
 
 .best-track-card .cover-img {
-  width: 25%;
+  width: 30%;
   aspect-ratio: 1 / 1;
-  border-radius: 0.75rem;
+  border-radius: 0.25rem;
   object-fit: cover;
   background: #111;
   flex-shrink: 0;
@@ -276,7 +276,7 @@ h2 {
   font-size: 2rem;
   color: #fff;
   font-weight: 700;
-  text-align: center;
+  text-align: left;
 }
 
 .best-track-card .best-track-info {
@@ -449,4 +449,223 @@ i {
 
 .track-row:hover .cover-img {
   opacity: 0.5;
+}
+
+.album-hero {
+  display: flex;
+  gap: 2rem;
+  padding: 4.5rem 3rem 1.5rem 2.5rem;
+  background: linear-gradient(180deg, #282828 60%, #1f1f1f 100%);
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.album-hero-img {
+  width: 180px;
+  height: 180px;
+  border-radius: 0.3rem;
+  object-fit: cover;
+  box-shadow: 0 0px 32px 0 rgba(0, 0, 0, 0.185);
+  background: #111;
+}
+
+.album-hero-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.album-type {
+  font-size: 1rem;
+  color: var(--light-text);
+  margin-bottom: 0.4rem;
+  font-weight: 400;
+}
+
+.album-title {
+  font-size: 4rem;
+  font-weight: 900;
+  color: #fff;
+  margin: 0 0 0.4rem 0;
+  line-height: 1.1;
+}
+
+.album-meta {
+  display: flex;
+  gap: 0.4rem;
+  font-size: 1rem;
+  color: var(--muted-text);
+}
+
+.album-meta .album-artist {
+  font-weight: 700;
+  color: var(--light-text);
+}
+
+.album-meta .album-artist:hover {
+  text-decoration: underline;
+}
+
+.album-controls {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 1.5rem 0 1rem 1.5rem;
+}
+
+.album-btn {
+  background-color: var(--album-button);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 50%;
+  font-size: 1rem;
+  line-height: 2rem;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  margin: 0;
+}
+
+.album-btn:hover {
+  scale: 1.03;
+}
+
+.album-btn:active {
+  scale: 0.97;
+}
+
+.album-play-btn {
+  background: var(--primary-green);
+  color: var(--light-text);
+  width: 3.5rem;
+  height: 3.5rem;
+  font-size: 2rem;
+  box-shadow: 0 2px 8px rgba(30, 185, 84, 0.15);
+  border: none;
+}
+
+.album-play-btn:hover {
+  background: #1ed760;
+}
+
+.album-btn i {
+  color: var(--album-button);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.album-btn:hover i {
+  color: var(--light-text);
+}
+
+.album-play-btn i {
+  color: var(--light-text);
+  font-size: 1.2rem;
+  margin-left: 0.1rem;
+}
+
+.album-save-btn {
+  border: 2px solid var(--album-button);
+  background: transparent;
+  font-size: 1.3rem;
+}
+
+.album-save-btn:hover,
+.album-more-btn:hover {
+  border-color: var(--light-text);
+  color: var(--light-text);
+  background-color: transparent;
+}
+
+.album-tracklist-col.time {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+span.album-tracklist-col.number,
+span.album-tracklist-col.title,
+div.album-tracklist-col.plays,
+i.fa-clock {
+  color: #a3a3a3ad;
+}
+
+.album-tracklist-container {
+  width: 98%;
+  margin: 0 auto;
+}
+
+.album-track-row {
+  padding: 0.75rem 1.5rem;
+  min-width: 100rem;
+  max-width: 130rem;
+  background: transparent;
+}
+
+.album-tracklist-col.plays,
+.play-info {
+  text-align: right;
+  display: block;
+  padding-right: 32rem;
+}
+
+.album-tracklist-header,
+.album-track-row {
+  display: grid;
+  grid-template-columns:
+    3rem /* number */
+    1fr /* title/artist */
+    50rem /* plays */
+    3rem /* save button */
+    2rem /* time */
+    1rem; /* elipsis button */
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 30rem;
+  max-width: 120rem;
+}
+
+.album-tracklist-header {
+  border-bottom: #a3a3a328 1px solid;
+  padding: 1rem 1.5rem;
+  margin: 0 0 1rem 0;
+}
+
+.album-list-number {
+  margin: 0;
+}
+
+div.play-info {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted-text)
+}
+
+.album-track-elipsis-btn,
+.album-track-save-btn,
+.album-track-elipsis-btn:hover,
+.album-track-save-btn:hover {
+  padding: 0;
+}
+
+.album-track-elipsis-btn {
+  margin-left: 0.25rem;
+}
+
+.album-track-save-btn {
+   margin-right: 1rem;
+}
+
+span.album-track-duration {
+  margin: 0;
 }
