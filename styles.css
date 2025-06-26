@@ -136,11 +136,6 @@ h2 {
   text-align: left;
 }
 
-.list-number {
-  margin: 0 1.5rem 0 0.75rem;
-  color: var(--muted-text);
-}
-
 #tracks-container {
   display: flex;
   flex-direction: column;
@@ -454,7 +449,7 @@ i {
 .album-hero {
   display: flex;
   gap: 2rem;
-  padding: 4.5rem 3rem 1.5rem 2.5rem;
+  padding: 4rem 3rem 1.5rem 2.5rem;
   background: linear-gradient(180deg, #282828 60%, #1f1f1f 100%);
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
@@ -463,12 +458,18 @@ i {
 }
 
 .album-hero-img {
-  width: 180px;
-  height: 180px;
+  width: 14rem;
+  height: 14rem;
   border-radius: 0.3rem;
   object-fit: cover;
   box-shadow: 0 0px 32px 0 rgba(0, 0, 0, 0.185);
   background: #111;
+    transition: scale 0.18s cubic-bezier(.4,0,.2,1), color 0.15s;
+
+}
+
+.album-hero-img:hover {
+  scale: 1.03;
 }
 
 .album-hero-info {
@@ -481,21 +482,20 @@ i {
 .album-type {
   font-size: 1rem;
   color: var(--light-text);
-  margin-bottom: 0.4rem;
   font-weight: 400;
 }
 
 .album-title {
-  font-size: 4rem;
+  font-size: 6rem;
   font-weight: 900;
   color: #fff;
-  margin: 0 0 0.4rem 0;
+  margin: 0 0 1rem 0;
   line-height: 1.1;
 }
 
 .album-meta {
   display: flex;
-  gap: 0.4rem;
+  gap: 0.3rem;
   font-size: 1rem;
   color: var(--muted-text);
 }
@@ -503,6 +503,7 @@ i {
 .album-meta .album-artist {
   font-weight: 700;
   color: var(--light-text);
+  text-decoration: none;
 }
 
 .album-meta .album-artist:hover {
@@ -601,7 +602,7 @@ i.fa-clock {
 
 .album-tracklist-container {
   width: 98%;
-  margin: 0 auto;
+  margin: 0 auto 1.5rem auto;
 }
 
 .album-track-row {
@@ -641,13 +642,31 @@ i.fa-clock {
   margin: 0 0 1rem 0;
 }
 
+.list-number {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 1.3rem;
+  width: 1.5rem;
+  min-width: 1.5rem;
+  margin: 0 1.5rem 0 0;
+  color: var(--muted-text);
+  font-variant-numeric: tabular-nums;
+}
+
 .album-list-number {
-  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 1.5rem;
+  min-width: 1.5rem;
+  margin: 0 0 0 0;
+  color: var(--muted-text);
+  font-variant-numeric: tabular-nums;
 }
 
 div.play-info {
   margin: 0;
-  font-size: 0.9rem;
   color: var(--muted-text);
 }
 
@@ -667,6 +686,7 @@ div.play-info {
 }
 
 span.album-track-duration {
+  font-size: 1rem;
   margin: 0;
 }
 
@@ -711,7 +731,17 @@ p.album-card-name {
   margin: 0.5rem 0 0 0;
 }
 
-.album-card-info {
+div.album-card-info {
+  display: flex;
+  gap: 0.2rem;
   font-size: 0.9rem;
   color: var(--muted-text);
+}
+
+#album-artists-container {
+  display: flex;
+}
+
+#album-artists-container span.comma {
+  margin-right: 0.3rem;
 }
