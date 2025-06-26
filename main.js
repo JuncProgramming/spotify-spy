@@ -31,15 +31,22 @@ const showDetailsView = () => {
   if (details) details.style.display = 'flex';
 };
 
+const createSidebar = () => {
+  const sidebar = document.createElement('div');
+  sidebar.classList.add('sidebar');
+  return sidebar;
+};
+
 const createBestResultCard = (track) => {
   const bestTrackRow = document.createElement('div');
   bestTrackRow.classList.add('best-track-card');
 
   const img = document.createElement('img');
-  img.classList.add('cover-img', 'best-cover-img');
+  img.classList.add('cover-img');
   img.src = track.album.images[0]?.url || './media/default-cover.png';
   img.alt = track.name ? `${track.name} cover` : 'Cover';
   img.style.display = 'block';
+  img.loading = 'lazy'
 
   // const play = document.createElement('a');
   // play.classList.add('play-btn');
@@ -104,6 +111,7 @@ const createTrackCard = (track, number = null) => {
   img.src = track.album.images[2]?.url || './media/default-cover.png';
   img.alt = track.name ? `${track.name} cover` : 'Cover';
   img.style.display = 'block';
+  img.loading = 'lazy'
 
   const play = document.createElement('a');
   play.classList.add('play-btn');
@@ -181,6 +189,49 @@ const createTrackCard = (track, number = null) => {
   return row;
 };
 
+const createAlbumCover = (album) => {
+  const card = document.createElement('a');
+  card.classList.add('album-card');
+  card.href = `/album.html?id=${album.id}`;
+
+  const img = document.createElement('img');
+  img.classList.add('album-card-cover');
+  img.src = album.images?.[0]?.url || './media/default-cover.png';
+  img.alt = album.name || 'Album cover';
+  img.loading = 'lazy'
+
+  const name = document.createElement('p');
+  name.classList.add('album-card-name');
+  name.textContent = album.name || 'Album name';
+
+  const info = document.createElement('div');
+  info.classList.add('album-card-info');
+
+  const year = document.createElement('span');
+  year.classList.add('album-card-year');
+  year.textContent = album.release_date
+    ? album.release_date.slice(0, 4)
+    : 'Year';
+
+  const dot = document.createElement('span');
+  dot.textContent = ' • ';
+
+  const type = document.createElement('span');
+  type.classList.add('album-card-type');
+  type.textContent = album.album_type
+    ? album.album_type.charAt(0).toUpperCase() + album.album_type.slice(1)
+    : 'Type';
+
+  info.appendChild(year);
+  info.appendChild(dot);
+  info.appendChild(type);
+  card.appendChild(img);
+  card.appendChild(name);
+  card.appendChild(info);
+
+  return card;
+};
+
 const createSearch = (tracks) => {
   const spotifyCard = document.createElement('div');
   spotifyCard.classList.add('spotify-card');
@@ -204,8 +255,7 @@ const createSearch = (tracks) => {
   tracksContainer.appendChild(tracksHeader);
 
   tracks.forEach((track) => {
-    const card = createTrackCard(track);
-    tracksContainer.appendChild(card);
+    tracksContainer.appendChild(createTrackCard(track));
   });
 
   bestTrackContainer.appendChild(bestTrackHeader);
@@ -275,8 +325,17 @@ const createArtist = (data, tracks = [], albums = []) => {
   popularTracksContainer.appendChild(popularHeader);
 
   tracks.forEach((track, index) => {
-    const card = createTrackCard(track, index + 1);
-    popularTracksContainer.appendChild(card);
+    popularTracksContainer.appendChild(createTrackCard(track, index + 1));
+  });
+
+  const discographyHeader = document.createElement('h2');
+  discographyHeader.textContent = 'Discography';
+
+  const albumsContainer = document.createElement('div');
+  albumsContainer.id = 'artist-albums-container';
+
+  albums.forEach((album) => {
+    albumsContainer.appendChild(createAlbumCover(album));
   });
 
   p.appendChild(verifiedIcon);
@@ -289,6 +348,8 @@ const createArtist = (data, tracks = [], albums = []) => {
   hero.appendChild(heroInner);
   spotifyCard.appendChild(hero);
   spotifyCard.appendChild(popularTracksContainer);
+  spotifyCard.appendChild(discographyHeader);
+  spotifyCard.appendChild(albumsContainer);
 
   return spotifyCard;
 };
@@ -298,9 +359,6 @@ const displaySearch = async (e) => {
 
   const main = document.querySelector('main');
   main.innerHTML = '';
-
-  const sidebar = document.createElement('div');
-  sidebar.classList.add('sidebar');
 
   const searchField = document.getElementById('search');
   const query = searchField.value;
@@ -322,7 +380,7 @@ const displaySearch = async (e) => {
 
   const content = createSearch(tracks);
 
-  main.appendChild(sidebar);
+  main.appendChild(createSidebar());
   main.appendChild(content);
 
   showResultsView();
@@ -335,34 +393,25 @@ const displayArtist = async () => {
   const main = document.querySelector('main');
   main.innerHTML = '';
 
-  const sidebar = document.createElement('div');
-  sidebar.classList.add('sidebar');
-
   const token = await getToken();
-  const artistRes = await fetch(
-    `${BASE_URL}artists/${encodeURIComponent(artistId)}`,
-    {
+
+  const [artistRes, topTracksRes, topAlbumsRes] = await Promise.all([
+    fetch(`${BASE_URL}artists/${encodeURIComponent(artistId)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
-  );
-  const topTracksRes = await fetch(
-    `${BASE_URL}artists/${encodeURIComponent(artistId)}/top-tracks`,
-    {
+    }),
+    fetch(`${BASE_URL}artists/${encodeURIComponent(artistId)}/top-tracks`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
-  );
-  const topAlbumsRes = await fetch(
-    `${BASE_URL}artists/${encodeURIComponent(artistId)}/albums?limit=5`,
-    {
+    }),
+    fetch(`${BASE_URL}artists/${encodeURIComponent(artistId)}/albums?limit=8`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
-  );
+    }),
+  ]);
 
   const artistData = await artistRes.json();
   const topTracksData = await topTracksRes.json();
@@ -373,7 +422,7 @@ const displayArtist = async () => {
 
   const content = createArtist(artistData, tracks, albums);
 
-  main.appendChild(sidebar);
+  main.appendChild(createSidebar());
   main.appendChild(content);
 };
 
