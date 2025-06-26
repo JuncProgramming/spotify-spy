@@ -227,6 +227,7 @@ h2 {
 }
 
 .best-track-card {
+  position: relative;
   max-width: 20rem;
   width: 100%;
   background: #222;
@@ -237,6 +238,39 @@ h2 {
   padding: 1rem 1rem 2rem 1rem;
   box-sizing: border-box;
   overflow: hidden;
+}
+
+.best-track-card a.green-play-btn {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--primary-green);
+  cursor: pointer;
+  transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+}
+
+.best-track-card a.green-play-btn i {
+  color: var(--very-dark-bg);
+  text-decoration: none;
+  font-size: 1.25rem;
+  margin-left: 0.15em;
+}
+
+.best-track-card a.green-play-btn:hover {
+  text-decoration: none;
+  background: var(--hover-green);
+  transform: scale(1.03);
+}
+
+.best-track-card:hover {
+  background: var(--light-bg);
 }
 
 .best-track-card .cover-img {
@@ -464,8 +498,7 @@ i {
   object-fit: cover;
   box-shadow: 0 0px 32px 0 rgba(0, 0, 0, 0.185);
   background: #111;
-    transition: scale 0.18s cubic-bezier(.4,0,.2,1), color 0.15s;
-
+  transition: scale 0.18s cubic-bezier(0.4, 0, 0.2, 1), color 0.15s;
 }
 
 .album-hero-img:hover {
@@ -544,18 +577,40 @@ i {
   scale: 0.97;
 }
 
-.album-play-btn {
-  background: var(--primary-green);
-  color: var(--light-text);
+a.album-play-btn {
+    text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 3.5rem;
   height: 3.5rem;
+  border-radius: 50%;
+  background: var(--primary-green);
+  color: var(--very-dark-bg);
   font-size: 2rem;
-  box-shadow: 0 2px 8px rgba(30, 185, 84, 0.15);
   border: none;
+  transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  outline: none;
 }
 
-.album-play-btn:hover {
-  background: #1ed760;
+a.album-play-btn i {
+    text-decoration: none;
+  color: var(--very-dark-bg);
+  font-size: 1.25rem;
+  margin-left: 0.15em;
+  pointer-events: none;
+}
+
+a.album-play-btn:hover i {
+    text-decoration: none;
+  color: var(--very-dark-bg);
+}
+
+a.album-play-btn:hover {
+    text-decoration: none;
+  background: var(--hover-green);
+  transform: scale(1.01);
 }
 
 .album-btn i {
@@ -566,12 +621,6 @@ i {
 
 .album-btn:hover i {
   color: var(--light-text);
-}
-
-.album-play-btn i {
-  color: var(--light-text);
-  font-size: 1.2rem;
-  margin-left: 0.1rem;
 }
 
 .album-save-btn {
