@@ -76,17 +76,13 @@ const createBestResultCard = (track) => {
   img.style.display = 'block';
   img.loading = 'lazy';
 
-  // const play = document.createElement('a');
-  // play.classList.add('play-btn');
-  // play.style.position = 'absolute';
-  // play.style.top = '45%';
-  // play.style.left = '40%';
-  // play.style.transform = 'translate(-50%, -50%)';
-  // play.href = track.external_urls.spotify;
-  // play.target = '_blank';
+  const play = document.createElement('a');
+  play.classList.add('green-play-btn');
+  play.href = track.external_urls.spotify;
+  play.target = '_blank';
 
-  // const playIcon = document.createElement('i');
-  // playIcon.classList.add('fa-solid', 'fa-play', 'play-icon');
+  const playIcon = document.createElement('i');
+  playIcon.classList.add('fa-solid', 'fa-play', 'play-icon');
 
   const info = document.createElement('div');
   info.classList.add('best-track-info');
@@ -112,10 +108,12 @@ const createBestResultCard = (track) => {
     }
   });
 
+  play.appendChild(playIcon)
   info.appendChild(title);
   info.appendChild(artistsContainer);
   bestTrackRow.appendChild(img);
   bestTrackRow.appendChild(info);
+  bestTrackRow.appendChild(play)
 
   return bestTrackRow;
 };
@@ -455,10 +453,13 @@ const createAlbum = (album, tracks) => {
   const albumControls = document.createElement('div');
   albumControls.classList.add('album-controls');
 
-  const playBtn = document.createElement('button');
+  const playBtn = document.createElement('a');
   playBtn.classList.add('album-btn', 'album-play-btn');
   const playIcon = document.createElement('i');
   playIcon.classList.add('fa-solid', 'fa-play');
+  console.log(tracks[0].external_urls.spotify);
+  playBtn.href = tracks[0].external_urls.spotify;
+  playBtn.target = '_blank';
 
   const saveBtn = document.createElement('button');
   saveBtn.classList.add('album-btn', 'album-save-btn');
