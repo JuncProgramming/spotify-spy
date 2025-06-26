@@ -10,11 +10,27 @@ const getToken = async () => {
   return data.access_token;
 };
 
-const convertMsToMinutes = (ms) => {
+const convertDuration = (ms, isTrackFormat = true) => {
   if (!ms) return 'duration';
-  const mins = Math.floor(ms / 60000);
-  const secs = Math.floor((ms % 60000) / 1000);
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
+
+  if (isTrackFormat) {
+    const mins = Math.floor(ms / 60000);
+    const secs = Math.floor((ms % 60000) / 1000);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  }
+
+  const hours = Math.floor(ms / 3600000);
+  const mins = Math.floor((ms % 3600000) / 60000);
+
+  if (hours > 0) {
+    if (mins === 0) {
+      return `${hours} hr`;
+    } else {
+      return `${hours} hr ${mins.toString().padStart(2, '0')} min`;
+    }
+  } else {
+    return `${mins} min`;
+  }
 };
 
 const showResultsView = () => {
@@ -29,6 +45,18 @@ const showDetailsView = () => {
   const details = document.getElementById('popular-tracks-container');
   if (results) results.style.display = 'none';
   if (details) details.style.display = 'flex';
+};
+
+const createDotSpacer = () => {
+  const dot = document.createElement('span');
+  dot.textContent = '•';
+  return dot;
+};
+
+const createEmptyElement = () => {
+  const headerEmpty = document.createElement('span');
+  headerEmpty.textContent = '';
+  return headerEmpty;
 };
 
 const createSidebar = () => {
@@ -46,7 +74,7 @@ const createBestResultCard = (track) => {
   img.src = track.album.images[0]?.url || './media/default-cover.png';
   img.alt = track.name ? `${track.name} cover` : 'Cover';
   img.style.display = 'block';
-  img.loading = 'lazy'
+  img.loading = 'lazy';
 
   // const play = document.createElement('a');
   // play.classList.add('play-btn');
@@ -111,7 +139,7 @@ const createTrackCard = (track, number = null) => {
   img.src = track.album.images[2]?.url || './media/default-cover.png';
   img.alt = track.name ? `${track.name} cover` : 'Cover';
   img.style.display = 'block';
-  img.loading = 'lazy'
+  img.loading = 'lazy';
 
   const play = document.createElement('a');
   play.classList.add('play-btn');
@@ -165,7 +193,7 @@ const createTrackCard = (track, number = null) => {
   });
 
   const duration = document.createElement('span');
-  duration.textContent = convertMsToMinutes(track.duration_ms);
+  duration.textContent = convertDuration(track.duration_ms);
 
   const elipsis = document.createElement('button');
   elipsis.classList.add('elipsis-btn');
@@ -198,7 +226,7 @@ const createAlbumCover = (album) => {
   img.classList.add('album-card-cover');
   img.src = album.images?.[0]?.url || './media/default-cover.png';
   img.alt = album.name || 'Album cover';
-  img.loading = 'lazy'
+  img.loading = 'lazy';
 
   const name = document.createElement('p');
   name.classList.add('album-card-name');
@@ -213,9 +241,6 @@ const createAlbumCover = (album) => {
     ? album.release_date.slice(0, 4)
     : 'Year';
 
-  const dot = document.createElement('span');
-  dot.textContent = ' • ';
-
   const type = document.createElement('span');
   type.classList.add('album-card-type');
   type.textContent = album.album_type
@@ -223,7 +248,7 @@ const createAlbumCover = (album) => {
     : 'Type';
 
   info.appendChild(year);
-  info.appendChild(dot);
+  info.appendChild(createDotSpacer());
   info.appendChild(type);
   card.appendChild(img);
   card.appendChild(name);
@@ -296,7 +321,6 @@ const createArtist = (data, tracks = [], albums = []) => {
   image.classList.add('artist-hero-img');
   image.src = data.images?.[1]?.url || './media/default-cover.png';
   image.alt = data.name ? `Picture of ${data.name}` : 'Artist picture';
-  image.loading = 'lazy';
 
   const heroInfo = document.createElement('div');
   heroInfo.classList.add('artist-hero-info');
@@ -350,6 +374,214 @@ const createArtist = (data, tracks = [], albums = []) => {
   spotifyCard.appendChild(popularTracksContainer);
   spotifyCard.appendChild(discographyHeader);
   spotifyCard.appendChild(albumsContainer);
+
+  return spotifyCard;
+};
+
+const createAlbum = (album, tracks) => {
+  const spotifyCard = document.createElement('div');
+  spotifyCard.classList.add('spotify-card');
+
+  const albumHero = document.createElement('div');
+  albumHero.classList.add('album-hero');
+
+  const albumImg = document.createElement('img');
+  albumImg.classList.add('album-hero-img');
+  albumImg.src = album.images?.[0]?.url || 'media/default-cover.png';
+  albumImg.alt = album.name + ' cover';
+
+  const albumHeroInfo = document.createElement('div');
+  albumHeroInfo.classList.add('album-hero-info');
+
+  const albumType = document.createElement('span');
+  albumType.classList.add('album-type');
+  albumType.textContent = album.album_type
+    ? album.album_type.charAt(0).toUpperCase() + album.album_type.slice(1)
+    : 'Unknown type';
+
+  const albumTitle = document.createElement('h1');
+  albumTitle.classList.add('album-title');
+  albumTitle.textContent = album.name || 'Unknown title';
+
+  const albumMeta = document.createElement('div');
+  albumMeta.classList.add('album-meta');
+
+  const albumArtistsContainer = document.createElement('div');
+  albumArtistsContainer.id = 'album-artists-container';
+
+  album.artists.forEach((artist, index) => {
+    const artistText = document.createElement('a');
+    artistText.textContent = artist.name || 'artist';
+    artistText.href = `/artist.html?id=${artist.id}`;
+    artistText.classList.add('album-artist');
+    albumArtistsContainer.appendChild(artistText);
+
+    if (index < album.artists.length - 1) {
+      const comma = document.createElement('span');
+      comma.classList.add('comma');
+      comma.textContent = ',';
+      comma.style.color = '#ffffff';
+      albumArtistsContainer.appendChild(comma);
+    }
+  });
+
+  const albumYear = document.createElement('span');
+  albumYear.classList.add('album-year');
+  albumYear.textContent = album.release_date
+    ? album.release_date.slice(0, 4)
+    : '';
+
+  const totalDuration = convertDuration(
+    tracks.reduce((acc, cur) => acc + cur.duration_ms, 0),
+    false
+  );
+
+  const albumTrackcount = document.createElement('span');
+  albumTrackcount.classList.add('album-trackcount');
+  // Duration here
+  albumTrackcount.textContent = `${tracks.length} tracks, ${totalDuration}`;
+
+  albumMeta.appendChild(albumArtistsContainer);
+  albumMeta.appendChild(createDotSpacer());
+  albumMeta.appendChild(albumYear);
+  albumMeta.appendChild(createDotSpacer());
+  albumMeta.appendChild(albumTrackcount);
+  albumHeroInfo.appendChild(albumType);
+  albumHeroInfo.appendChild(albumTitle);
+  albumHeroInfo.appendChild(albumMeta);
+  albumHero.appendChild(albumImg);
+  albumHero.appendChild(albumHeroInfo);
+
+  const albumControls = document.createElement('div');
+  albumControls.classList.add('album-controls');
+
+  const playBtn = document.createElement('button');
+  playBtn.classList.add('album-btn', 'album-play-btn');
+  const playIcon = document.createElement('i');
+  playIcon.classList.add('fa-solid', 'fa-play');
+
+  const saveBtn = document.createElement('button');
+  saveBtn.classList.add('album-btn', 'album-save-btn');
+  const saveIcon = document.createElement('i');
+  saveIcon.classList.add('fa-solid', 'fa-plus');
+
+  const moreBtn = document.createElement('button');
+  moreBtn.classList.add('album-btn', 'album-more-btn');
+  const moreIcon = document.createElement('i');
+  moreIcon.classList.add('fa-solid', 'fa-ellipsis');
+
+  const albumTracklistContainer = document.createElement('div');
+  albumTracklistContainer.classList.add('album-tracklist-container');
+
+  const albumTracklistHeader = document.createElement('div');
+  albumTracklistHeader.classList.add('album-tracklist-header');
+
+  const headerNumber = document.createElement('span');
+  headerNumber.classList.add('album-tracklist-col', 'number');
+  headerNumber.textContent = '#';
+
+  const headerTitle = document.createElement('span');
+  headerTitle.classList.add('album-tracklist-col', 'title');
+  headerTitle.textContent = 'Tytuł';
+
+  const headerPlays = document.createElement('div');
+  headerPlays.classList.add('album-tracklist-col', 'plays');
+  headerPlays.textContent = 'Odtworzenia';
+
+  const headerTime = document.createElement('div');
+  headerTime.classList.add('album-tracklist-col', 'time');
+  const timeIcon = document.createElement('i');
+  timeIcon.classList.add('fa-regular', 'fa-clock');
+
+  playBtn.appendChild(playIcon);
+  saveBtn.appendChild(saveIcon);
+  moreBtn.appendChild(moreIcon);
+  albumControls.appendChild(playBtn);
+  albumControls.appendChild(saveBtn);
+  albumControls.appendChild(moreBtn);
+  headerTime.appendChild(timeIcon);
+  albumTracklistHeader.appendChild(headerNumber);
+  albumTracklistHeader.appendChild(headerTitle);
+  albumTracklistHeader.appendChild(headerPlays);
+  albumTracklistHeader.appendChild(createEmptyElement());
+  albumTracklistHeader.appendChild(headerTime);
+  albumTracklistHeader.appendChild(createEmptyElement());
+  albumTracklistContainer.appendChild(albumTracklistHeader);
+
+  const albumTracklist = document.createElement('div');
+  albumTracklist.classList.add('album-tracklist');
+
+  tracks.forEach((track, i) => {
+    const albumTrackRow = document.createElement('div');
+    albumTrackRow.classList.add('track-row', 'album-track-row');
+
+    const numberDiv = document.createElement('div');
+    const number = document.createElement('p');
+    number.classList.add('list-number', 'album-list-number');
+    number.textContent = i + 1;
+
+    const infoDiv = document.createElement('div');
+    infoDiv.classList.add('track-info');
+    const trackName = document.createElement('h3');
+    trackName.textContent = track.name;
+
+    const artistsContainer = document.createElement('div');
+
+    track.artists.forEach((artist, index) => {
+      const artistText = document.createElement('a');
+      artistText.textContent = artist.name || 'artist';
+      artistText.href = `/artist.html?id=${artist.id}`;
+      artistText.classList.add('album-artist');
+      artistsContainer.appendChild(artistText);
+
+      if (index < track.artists.length - 1) {
+        const comma = document.createElement('span');
+        comma.classList.add('comma');
+        comma.textContent = ',';
+        comma.style.color = '#bbbbbb';
+        artistsContainer.appendChild(comma);
+      }
+    });
+
+    const playInfo = document.createElement('div');
+    playInfo.classList.add('play-info');
+    // Random ass number, because the API doesn't return it :(
+    playInfo.textContent = (
+      Math.floor(Math.random() * (9000000 - 1000)) + 1000
+    ).toLocaleString();
+
+    const saveButton = document.createElement('button');
+    saveButton.classList.add('save-btn', 'album-track-save-btn');
+    const saveBtnIcon = document.createElement('i');
+    saveBtnIcon.classList.add('fa-solid', 'fa-circle-plus', 'scalable');
+
+    const trackDuration = document.createElement('span');
+    trackDuration.classList.add('album-track-duration');
+    trackDuration.textContent = convertDuration(track.duration_ms);
+
+    const elipsisBtn = document.createElement('button');
+    elipsisBtn.classList.add('elipsis-btn', 'album-track-elipsis-btn');
+    const elipsisIcon = document.createElement('i');
+    elipsisIcon.classList.add('fa-solid', 'fa-ellipsis', 'scalable');
+
+    numberDiv.appendChild(number);
+    infoDiv.appendChild(trackName);
+    infoDiv.appendChild(artistsContainer);
+    saveButton.appendChild(saveBtnIcon);
+    elipsisBtn.appendChild(elipsisIcon);
+    albumTrackRow.appendChild(numberDiv);
+    albumTrackRow.appendChild(infoDiv);
+    albumTrackRow.appendChild(playInfo);
+    albumTrackRow.appendChild(saveButton);
+    albumTrackRow.appendChild(trackDuration);
+    albumTrackRow.appendChild(elipsisBtn);
+    albumTracklist.appendChild(albumTrackRow);
+  });
+
+  albumTracklistContainer.appendChild(albumTracklist);
+  spotifyCard.appendChild(albumHero);
+  spotifyCard.appendChild(albumControls);
+  spotifyCard.appendChild(albumTracklistContainer);
 
   return spotifyCard;
 };
@@ -426,6 +658,43 @@ const displayArtist = async () => {
   main.appendChild(content);
 };
 
+const displayAlbum = async () => {
+  const params = new URLSearchParams(window.location.search);
+  const albumId = params.get('id');
+
+  const main = document.querySelector('main');
+  main.innerHTML = '';
+
+  const token = await getToken();
+
+  const albumRes = await fetch(
+    `https://api.spotify.com/v1/albums/${encodeURIComponent(albumId)}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  const albumTracksRes = await fetch(
+    `https://api.spotify.com/v1/albums/${encodeURIComponent(albumId)}/tracks`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const albumData = await albumRes.json();
+  const albumTracksData = await albumTracksRes.json();
+
+  const tracks = albumTracksData.items;
+
+  const content = createAlbum(albumData, tracks);
+
+  main.appendChild(createSidebar());
+  main.appendChild(content);
+};
+
 const init = () => {
   const form = document.getElementById('form');
   if (form) {
@@ -436,6 +705,9 @@ const init = () => {
   }
   if (state.currentPage.endsWith('/artist.html')) {
     displayArtist();
+  }
+  if (state.currentPage.endsWith('/album.html')) {
+    displayAlbum();
   } else {
     console.warn('Page not recognized:', state.currentPage);
   }
