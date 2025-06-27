@@ -691,8 +691,7 @@ i.fa-clock {
   margin: 0 0 1rem 0;
 }
 
-.track-row:hover .list-number,
-.track-row:hover .album-list-number {
+.track-row:hover .list-number {
   visibility: hidden;
 }
 

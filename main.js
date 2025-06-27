@@ -108,12 +108,12 @@ const createBestResultCard = (track) => {
     }
   });
 
-  play.appendChild(playIcon)
+  play.appendChild(playIcon);
   info.appendChild(title);
   info.appendChild(artistsContainer);
   bestTrackRow.appendChild(img);
   bestTrackRow.appendChild(info);
-  bestTrackRow.appendChild(play)
+  bestTrackRow.appendChild(play);
 
   return bestTrackRow;
 };
@@ -122,34 +122,61 @@ const createTrackCard = (track, number = null) => {
   const row = document.createElement('div');
   row.classList.add('track-row');
 
-  if (number !== null) {
-    const listNumber = document.createElement('p');
-    listNumber.classList.add('list-number');
-    listNumber.textContent = number;
-    row.appendChild(listNumber);
-  }
-
   const imgContainer = document.createElement('div');
   imgContainer.style.position = 'relative';
 
   const img = document.createElement('img');
-  img.classList.add('cover-img');
+  img.style.position = 'relative';
+  img.style.zIndex = '1';
   img.src = track.album.images[2]?.url || './media/default-cover.png';
   img.alt = track.name ? `${track.name} cover` : 'Cover';
   img.style.display = 'block';
   img.loading = 'lazy';
 
-  const play = document.createElement('a');
-  play.classList.add('play-btn');
-  play.style.position = 'absolute';
-  play.style.top = '45%';
-  play.style.left = '40%';
-  play.style.transform = 'translate(-50%, -50%)';
-  play.href = track.external_urls.spotify;
-  play.target = '_blank';
+  if (number) {
+    const numberContainer = document.createElement('div');
+    numberContainer.classList.add('container-list-number');
+    numberContainer.style.position = 'relative';
 
-  const playIcon = document.createElement('i');
-  playIcon.classList.add('fa-solid', 'fa-play', 'play-icon');
+    const listNumber = document.createElement('p');
+    listNumber.classList.add('list-number');
+    listNumber.textContent = number;
+
+    const play = document.createElement('a');
+    play.classList.add('play-btn');
+    play.style.position = 'absolute';
+    play.style.top = '45%';
+    play.style.left = '40%';
+    play.style.transform = 'translate(-50%, -50%)';
+    play.href = track.external_urls.spotify;
+    play.target = '_blank';
+
+    const playIcon = document.createElement('i');
+    playIcon.classList.add('fa-solid', 'fa-play', 'play-icon');
+
+    play.appendChild(playIcon);
+    numberContainer.appendChild(play);
+    numberContainer.appendChild(listNumber);
+    row.appendChild(numberContainer);
+  } else {
+    img.classList.add('cover-img');
+
+    const play = document.createElement('a');
+    play.classList.add('play-btn');
+    play.style.position = 'absolute';
+    play.style.zIndex = '2';
+    play.style.top = '45%';
+    play.style.left = '40%';
+    play.style.transform = 'translate(-50%, -50%)';
+    play.href = track.external_urls.spotify;
+    play.target = '_blank';
+
+    const playIcon = document.createElement('i');
+    playIcon.classList.add('fa-solid', 'fa-play', 'play-icon');
+
+    play.appendChild(playIcon);
+    imgContainer.appendChild(play);
+  }
 
   const info = document.createElement('div');
   info.classList.add('track-info');
@@ -201,11 +228,9 @@ const createTrackCard = (track, number = null) => {
 
   info.appendChild(title);
   info.appendChild(artistsContainer);
-  play.appendChild(playIcon);
   save.appendChild(saveIcon);
   elipsis.appendChild(elipsisIcon);
   imgContainer.appendChild(img);
-  imgContainer.appendChild(play);
   row.appendChild(imgContainer);
   row.appendChild(info);
   row.appendChild(save);
@@ -512,14 +537,34 @@ const createAlbum = (album, tracks) => {
   const albumTracklist = document.createElement('div');
   albumTracklist.classList.add('album-tracklist');
 
-  tracks.forEach((track, i) => {
+  tracks.forEach((track, index) => {
     const albumTrackRow = document.createElement('div');
     albumTrackRow.classList.add('track-row', 'album-track-row');
 
-    const numberDiv = document.createElement('div');
+    const numberContainer = document.createElement('div');
+    numberContainer.classList.add('container-list-number');
+    numberContainer.style.position = 'relative';
+
     const number = document.createElement('p');
     number.classList.add('list-number', 'album-list-number');
-    number.textContent = i + 1;
+    number.textContent = index + 1;
+
+    const play = document.createElement('a');
+    play.classList.add('play-btn');
+    play.style.position = 'absolute';
+    play.style.top = '45%';
+    play.style.left = '40%';
+    play.style.transform = 'translate(-50%, -50%)';
+    play.href = track.external_urls.spotify;
+    play.target = '_blank';
+
+    const playIcon = document.createElement('i');
+    playIcon.classList.add('fa-solid', 'fa-play', 'play-icon');
+
+    play.appendChild(playIcon);
+    numberContainer.appendChild(play);
+    numberContainer.appendChild(number);
+    albumTrackRow.appendChild(numberContainer);
 
     const infoDiv = document.createElement('div');
     infoDiv.classList.add('track-info');
@@ -565,12 +610,12 @@ const createAlbum = (album, tracks) => {
     const elipsisIcon = document.createElement('i');
     elipsisIcon.classList.add('fa-solid', 'fa-ellipsis', 'scalable');
 
-    numberDiv.appendChild(number);
+    numberContainer.appendChild(number);
     infoDiv.appendChild(trackName);
     infoDiv.appendChild(artistsContainer);
     saveButton.appendChild(saveBtnIcon);
     elipsisBtn.appendChild(elipsisIcon);
-    albumTrackRow.appendChild(numberDiv);
+    albumTrackRow.appendChild(numberContainer);
     albumTrackRow.appendChild(infoDiv);
     albumTrackRow.appendChild(playInfo);
     albumTrackRow.appendChild(saveButton);
