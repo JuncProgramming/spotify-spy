@@ -578,7 +578,7 @@ i {
 }
 
 a.album-play-btn {
-    text-decoration: none;
+  text-decoration: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -595,7 +595,7 @@ a.album-play-btn {
 }
 
 a.album-play-btn i {
-    text-decoration: none;
+  text-decoration: none;
   color: var(--very-dark-bg);
   font-size: 1.25rem;
   margin-left: 0.15em;
@@ -603,12 +603,12 @@ a.album-play-btn i {
 }
 
 a.album-play-btn:hover i {
-    text-decoration: none;
+  text-decoration: none;
   color: var(--very-dark-bg);
 }
 
 a.album-play-btn:hover {
-    text-decoration: none;
+  text-decoration: none;
   background: var(--hover-green);
   transform: scale(1.01);
 }
@@ -689,6 +689,11 @@ i.fa-clock {
   border-bottom: #a3a3a328 1px solid;
   padding: 1rem 1.5rem;
   margin: 0 0 1rem 0;
+}
+
+.track-row:hover .list-number,
+.track-row:hover .album-list-number {
+  visibility: hidden;
 }
 
 .list-number {
