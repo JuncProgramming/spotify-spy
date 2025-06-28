@@ -408,6 +408,25 @@ const createAlbum = (album, tracks) => {
   const albumHero = document.createElement('div');
   albumHero.classList.add('album-hero');
 
+  const albumImgUrl = album.images?.[0]?.url;
+  const imgForColor = new Image();
+  imgForColor.crossOrigin = 'anonymous';
+  imgForColor.src = albumImgUrl;
+
+  imgForColor.onload = () => {
+    const colorThief = new ColorThief();
+    const [r, g, b] = colorThief.getColor(imgForColor);
+    spotifyCard.style.setProperty('--album-accent', `rgb(${r}, ${g}, ${b})`);
+
+    albumHero.style.background = `
+    linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 1), rgba(${r}, ${g}, ${b}, 0))
+  `;
+  };
+
+  if (!albumImgUrl) {
+    albumHero.style.background = 'linear-gradient(135deg, #1c1c1c, #121212)';
+  }
+
   const albumImg = document.createElement('img');
   albumImg.classList.add('album-hero-img');
   albumImg.src = album.images?.[0]?.url || 'media/default-cover.png';
@@ -636,7 +655,6 @@ const displaySearch = async (e) => {
   e.preventDefault();
 
   const main = document.querySelector('main');
-  main.innerHTML = '';
 
   const searchField = document.getElementById('search');
   const query = searchField.value;
@@ -658,6 +676,7 @@ const displaySearch = async (e) => {
 
   const content = createSearch(tracks);
 
+  main.innerHTML = '';
   main.appendChild(createSidebar());
   main.appendChild(content);
 
@@ -669,7 +688,6 @@ const displayArtist = async () => {
   const artistId = params.get('id');
 
   const main = document.querySelector('main');
-  main.innerHTML = '';
 
   const token = await getToken();
 
@@ -700,6 +718,7 @@ const displayArtist = async () => {
 
   const content = createArtist(artistData, tracks, albums);
 
+  main.innerHTML = '';
   main.appendChild(createSidebar());
   main.appendChild(content);
 };
@@ -709,7 +728,6 @@ const displayAlbum = async () => {
   const albumId = params.get('id');
 
   const main = document.querySelector('main');
-  main.innerHTML = '';
 
   const token = await getToken();
 
@@ -737,6 +755,7 @@ const displayAlbum = async () => {
 
   const content = createAlbum(albumData, tracks);
 
+  main.innerHTML = '';
   main.appendChild(createSidebar());
   main.appendChild(content);
 };
