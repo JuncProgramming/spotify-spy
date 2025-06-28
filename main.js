@@ -69,6 +69,9 @@ const createBestResultCard = (track) => {
   const bestTrackRow = document.createElement('div');
   bestTrackRow.classList.add('best-track-card');
 
+  const mainContent = document.createElement('div');
+  mainContent.classList.add('best-track-row-main');
+
   const img = document.createElement('img');
   img.classList.add('cover-img');
   img.src = track.album.images[0]?.url || './media/default-cover.png';
@@ -108,11 +111,22 @@ const createBestResultCard = (track) => {
     }
   });
 
+  bestTrackRow.addEventListener('mouseenter', () => {
+    play.classList.remove('animated-out');
+    play.classList.add('animated-in');
+  });
+
+  bestTrackRow.addEventListener('mouseleave', () => {
+    play.classList.remove('animated-in');
+    play.classList.add('animated-out');
+  });
+
   play.appendChild(playIcon);
   info.appendChild(title);
   info.appendChild(artistsContainer);
-  bestTrackRow.appendChild(img);
-  bestTrackRow.appendChild(info);
+  mainContent.appendChild(img);
+  mainContent.appendChild(info);
+  bestTrackRow.appendChild(mainContent);
   bestTrackRow.appendChild(play);
 
   return bestTrackRow;
