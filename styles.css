@@ -9,6 +9,34 @@
   --album-button: #a3a3a3;
 }
 
+.spotify-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40rem;
+  background: linear-gradient(
+    to bottom,
+    var(--album-accent, #1c1c1c),
+    transparent 90%
+  );
+  z-index: -1;
+  pointer-events: none;
+}
+
+.spotify-card {
+  position: relative;
+  background: transparent;
+  overflow: hidden;
+  z-index: 1;
+  border-radius: 1rem;
+  background-color: var(--dark-bg);
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100vh;
+}
+
 html,
 body {
   margin: 0;
@@ -72,7 +100,7 @@ main {
   padding: 0.6rem 1rem;
   font-size: 1rem;
   border: none;
-  border-radius: 9999px;
+  border-radius: 624.9375rem;
   background: var(--light-bg);
   color: var(--light-text);
   outline: none;
@@ -122,14 +150,6 @@ button:hover {
   object-fit: cover;
   object-position: center;
   display: block;
-}
-
-.spotify-card {
-  box-sizing: border-box;
-  border-radius: 1rem;
-  background-color: var(--dark-bg);
-  width: 100%;
-  min-height: 100vh;
 }
 
 h2 {
@@ -245,8 +265,8 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
+  width: 3.5rem;
+  height: 3.5rem;
   border-radius: 50%;
   background: var(--primary-green);
   cursor: pointer;
@@ -275,7 +295,7 @@ h2 {
 
 .best-track-card .cover-img {
   width: 30%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1/1;
   border-radius: 0.25rem;
   object-fit: cover;
   background: #111;
@@ -442,13 +462,13 @@ h2 {
 }
 
 .play-icon,
-.play-icon:hover {
+.play-icon:hover,
+i {
   color: var(--light-text);
 }
 
 i {
   vertical-align: middle;
-  color: var(--light-text);
 }
 
 .scalable:hover {
@@ -456,10 +476,7 @@ i {
   color: var(--light-text);
 }
 
-.isFavorite {
-  color: var(--hover-green);
-}
-
+.isFavorite,
 .isFavorite:hover {
   color: var(--hover-green);
 }
@@ -481,12 +498,15 @@ i {
 }
 
 .album-hero {
+  position: relative;
+  z-index: 1;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  background: transparent;
+  transition: background-image 0.5s ease-in-out;
   display: flex;
   gap: 2rem;
   padding: 4rem 3rem 1.5rem 2.5rem;
-  background: linear-gradient(180deg, #282828 60%, #1f1f1f 100%);
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
   width: 100%;
   box-sizing: border-box;
 }
@@ -496,7 +516,7 @@ i {
   height: 14rem;
   border-radius: 0.3rem;
   object-fit: cover;
-  box-shadow: 0 0px 32px 0 rgba(0, 0, 0, 0.185);
+  box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0.185);
   background: #111;
   transition: scale 0.18s cubic-bezier(0.4, 0, 0.2, 1), color 0.15s;
 }
@@ -624,7 +644,7 @@ a.album-play-btn:hover {
 }
 
 .album-save-btn {
-  border: 2px solid var(--album-button);
+  border: 0.125rem solid var(--album-button);
   background: transparent;
   font-size: 1.3rem;
 }
@@ -652,6 +672,8 @@ i.fa-clock {
 .album-tracklist-container {
   width: 98%;
   margin: 0 auto 1.5rem auto;
+  position: relative;
+  z-index: 1;
 }
 
 .album-track-row {
@@ -672,12 +694,12 @@ i.fa-clock {
 .album-track-row {
   display: grid;
   grid-template-columns:
-    3rem /* number */
-    1fr /* title/artist */
-    50rem /* plays */
-    3rem /* save button */
-    2rem /* time */
-    1rem; /* elipsis button */
+    3rem
+    1fr
+    50rem
+    3rem
+    2rem
+    1rem;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
@@ -686,7 +708,7 @@ i.fa-clock {
 }
 
 .album-tracklist-header {
-  border-bottom: #a3a3a328 1px solid;
+  border-bottom: 0.0625rem solid #a3a3a328;
   padding: 1rem 1.5rem;
   margin: 0 0 1rem 0;
 }
@@ -695,27 +717,24 @@ i.fa-clock {
   visibility: hidden;
 }
 
-.list-number {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  font-size: 1.3rem;
-  width: 1.5rem;
-  min-width: 1.5rem;
-  margin: 0 1.5rem 0 0;
-  color: var(--muted-text);
-  font-variant-numeric: tabular-nums;
-}
-
+.list-number,
 .album-list-number {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   width: 1.5rem;
   min-width: 1.5rem;
-  margin: 0 0 0 0;
   color: var(--muted-text);
   font-variant-numeric: tabular-nums;
+}
+
+.list-number {
+  margin: 0 1.5rem 0 0;
+  font-size: 1.3rem;
+}
+
+.album-list-number {
+  margin: 0;
 }
 
 div.play-info {
@@ -777,7 +796,7 @@ img.album-card-cover {
   display: flex;
   border-radius: 0.25rem;
   width: 11rem;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1/1;
 }
 
 p.album-card-name {
