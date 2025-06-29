@@ -894,3 +894,21 @@ div.album-card-info {
 #album-artists-container span.comma {
   margin-right: 0.3rem;
 }
+
+#new-releases-container {
+  padding: 1rem 0 0 2rem;
+  box-sizing: border-box;
+}
+
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  justify-content: start;
+  gap: 1.4rem;
+  box-sizing: border-box;
+}
+
+.album-grid-container {
+  width: 100%;
+  box-sizing: border-box;
+}
