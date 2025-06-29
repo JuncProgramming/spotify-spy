@@ -239,7 +239,7 @@ const createTrackCard = (track, number = null) => {
   const saveIcon = document.createElement('i');
   saveIcon.classList.add('fa-solid', 'fa-circle-plus', 'scalable');
 
-  addToFavorites(saveIcon)
+  addToFavorites(saveIcon);
 
   const duration = document.createElement('span');
   duration.textContent = convertDuration(track.duration_ms);
@@ -354,6 +354,35 @@ const createSearch = (tracks) => {
   searchResults.appendChild(bestTrackContainer);
   searchResults.appendChild(tracksContainer);
   spotifyCard.appendChild(searchResults);
+
+  return spotifyCard;
+};
+
+const createMain = (newReleases) => {
+  const spotifyCard = document.createElement('div');
+  spotifyCard.classList.add('spotify-card');
+
+  const newRealeasesContainer = document.createElement('div')
+  newRealeasesContainer.id = 'new-releases-container'
+
+  const sectionHeader = document.createElement('h2');
+  sectionHeader.textContent = 'New Releases';
+
+  const albumGridContainer = document.createElement('div')
+  albumGridContainer.classList.add('album-grid-container');
+
+  const albumGrid = document.createElement('div');
+  albumGrid.classList.add('album-grid');
+
+  newReleases.forEach((album) => {
+    const albumCard = createAlbumCover(album);
+    albumGrid.appendChild(albumCard);
+  });
+
+  albumGridContainer.appendChild(albumGrid)
+  newRealeasesContainer.appendChild(sectionHeader)
+  newRealeasesContainer.appendChild(albumGridContainer)
+  spotifyCard.appendChild(newRealeasesContainer);
 
   return spotifyCard;
 };
@@ -551,7 +580,7 @@ const createAlbum = (album, tracks) => {
   const saveIcon = document.createElement('i');
   saveIcon.classList.add('fa-solid', 'fa-plus');
 
-  addToFavorites(saveIcon)
+  addToFavorites(saveIcon);
 
   const moreBtn = document.createElement('button');
   moreBtn.classList.add('album-btn', 'album-more-btn');
@@ -726,6 +755,26 @@ const displaySearch = async (e) => {
   showResultsView();
 };
 
+const displayMain = async () => {
+  const main = document.querySelector('main');
+
+  const token = await getToken();
+
+  const newReleasesRes = await fetch(`${BASE_URL}browse/new-releases?limit=50`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  const newReleasesData = await newReleasesRes.json();
+
+  const newReleases = newReleasesData.albums.items;
+
+  const content = createMain(newReleases);
+
+  main.innerHTML = '';
+  main.appendChild(createSidebar());
+  main.appendChild(content);
+};
+
 const displayArtist = async () => {
   const params = new URLSearchParams(window.location.search);
   const artistId = params.get('id');
@@ -810,6 +859,12 @@ const init = () => {
     if (state.currentPage.endsWith('/artist.html')) {
       showDetailsView();
     }
+  }
+  if (
+    state.currentPage.endsWith('/') ||
+    state.currentPage.endsWith('/index.html')
+  ) {
+    displayMain();
   }
   if (state.currentPage.endsWith('/artist.html')) {
     displayArtist();
