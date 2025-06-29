@@ -47,6 +47,17 @@ const showDetailsView = () => {
   if (details) details.style.display = 'flex';
 };
 
+const addToFavorites = (saveIcon) => {
+  saveIcon.addEventListener('click', () => {
+    const isFavorite = saveIcon.classList.toggle('isFavorite');
+    if (isFavorite) {
+      saveIcon.classList.replace('fa-circle-plus', 'fa-circle-check');
+    } else {
+      saveIcon.classList.replace('fa-circle-check', 'fa-circle-plus');
+    }
+  });
+};
+
 const createDotSpacer = () => {
   const dot = document.createElement('span');
   dot.textContent = '•';
@@ -83,6 +94,12 @@ const createBestResultCard = (track) => {
   play.classList.add('green-play-btn');
   play.href = track.external_urls.spotify;
   play.target = '_blank';
+
+  play.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.open(track.album.external_urls.spotify, '_blank');
+    window.location.href = `/album.html?id=${track.album.id}`;
+  });
 
   const playIcon = document.createElement('i');
   playIcon.classList.add('fa-solid', 'fa-play', 'play-icon');
@@ -222,14 +239,7 @@ const createTrackCard = (track, number = null) => {
   const saveIcon = document.createElement('i');
   saveIcon.classList.add('fa-solid', 'fa-circle-plus', 'scalable');
 
-  saveIcon.addEventListener('click', () => {
-    const isFavorite = saveIcon.classList.toggle('isFavorite');
-    if (isFavorite) {
-      saveIcon.classList.replace('fa-circle-plus', 'fa-circle-check');
-    } else {
-      saveIcon.classList.replace('fa-circle-check', 'fa-circle-plus');
-    }
-  });
+  addToFavorites(saveIcon)
 
   const duration = document.createElement('span');
   duration.textContent = convertDuration(track.duration_ms);
@@ -259,11 +269,26 @@ const createAlbumCover = (album) => {
   card.classList.add('album-card');
   card.href = `/album.html?id=${album.id}`;
 
+  const imageContainer = document.createElement('div');
+  imageContainer.classList.add('album-card-image-container');
+
   const img = document.createElement('img');
   img.classList.add('album-card-cover');
   img.src = album.images?.[0]?.url || './media/default-cover.png';
   img.alt = album.name || 'Album cover';
   img.loading = 'lazy';
+
+  const play = document.createElement('a');
+  play.classList.add('album-cover-green-play-btn');
+
+  play.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.open(album.external_urls.spotify, '_blank');
+    window.location.href = `/album.html?id=${album.id}`;
+  });
+
+  const playIcon = document.createElement('i');
+  playIcon.classList.add('fa-solid', 'fa-play', 'play-icon');
 
   const name = document.createElement('p');
   name.classList.add('album-card-name');
@@ -284,10 +309,13 @@ const createAlbumCover = (album) => {
     ? album.album_type.charAt(0).toUpperCase() + album.album_type.slice(1)
     : 'Type';
 
+  play.appendChild(playIcon);
+  imageContainer.appendChild(img);
+  imageContainer.appendChild(play);
+  card.appendChild(imageContainer);
   info.appendChild(year);
   info.appendChild(createDotSpacer());
   info.appendChild(type);
-  card.appendChild(img);
   card.appendChild(name);
   card.appendChild(info);
 
@@ -515,7 +543,6 @@ const createAlbum = (album, tracks) => {
   playBtn.classList.add('album-btn', 'album-play-btn');
   const playIcon = document.createElement('i');
   playIcon.classList.add('fa-solid', 'fa-play');
-  console.log(tracks[0].external_urls.spotify);
   playBtn.href = tracks[0].external_urls.spotify;
   playBtn.target = '_blank';
 
@@ -523,6 +550,8 @@ const createAlbum = (album, tracks) => {
   saveBtn.classList.add('album-btn', 'album-save-btn');
   const saveIcon = document.createElement('i');
   saveIcon.classList.add('fa-solid', 'fa-plus');
+
+  addToFavorites(saveIcon)
 
   const moreBtn = document.createElement('button');
   moreBtn.classList.add('album-btn', 'album-more-btn');
