@@ -631,7 +631,6 @@ const createAlbum = (album, tracks) => {
       removeFavoriteAlbum(album);
     }
   });
-  console.log('attached listener to', saveBtn);
   albumControls.appendChild(moreBtn);
   headerTime.appendChild(timeIcon);
   albumTracklistHeader.appendChild(headerNumber);
