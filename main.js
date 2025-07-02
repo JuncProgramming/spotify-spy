@@ -1,3 +1,10 @@
+import {
+  getFavoriteAlbums,
+  loadFavoriteAlbums,
+  saveFavoriteAlbum,
+  removeFavoriteAlbum,
+} from './storage/storage.js';
+
 const state = {
   currentPage: window.location.pathname,
 };
@@ -362,13 +369,13 @@ const createMain = (newReleases) => {
   const spotifyCard = document.createElement('div');
   spotifyCard.classList.add('spotify-card');
 
-  const newRealeasesContainer = document.createElement('div')
-  newRealeasesContainer.id = 'new-releases-container'
+  const newRealeasesContainer = document.createElement('div');
+  newRealeasesContainer.id = 'new-releases-container';
 
   const sectionHeader = document.createElement('h2');
   sectionHeader.textContent = 'New Releases';
 
-  const albumGridContainer = document.createElement('div')
+  const albumGridContainer = document.createElement('div');
   albumGridContainer.classList.add('album-grid-container');
 
   const albumGrid = document.createElement('div');
@@ -379,9 +386,9 @@ const createMain = (newReleases) => {
     albumGrid.appendChild(albumCard);
   });
 
-  albumGridContainer.appendChild(albumGrid)
-  newRealeasesContainer.appendChild(sectionHeader)
-  newRealeasesContainer.appendChild(albumGridContainer)
+  albumGridContainer.appendChild(albumGrid);
+  newRealeasesContainer.appendChild(sectionHeader);
+  newRealeasesContainer.appendChild(albumGridContainer);
   spotifyCard.appendChild(newRealeasesContainer);
 
   return spotifyCard;
@@ -576,11 +583,10 @@ const createAlbum = (album, tracks) => {
   playBtn.target = '_blank';
 
   const saveBtn = document.createElement('button');
+  saveBtn.type = 'button';
   saveBtn.classList.add('album-btn', 'album-save-btn');
   const saveIcon = document.createElement('i');
   saveIcon.classList.add('fa-solid', 'fa-plus');
-
-  addToFavorites(saveIcon);
 
   const moreBtn = document.createElement('button');
   moreBtn.classList.add('album-btn', 'album-more-btn');
@@ -615,6 +621,17 @@ const createAlbum = (album, tracks) => {
   moreBtn.appendChild(moreIcon);
   albumControls.appendChild(playBtn);
   albumControls.appendChild(saveBtn);
+  saveBtn.addEventListener('click', () => {
+    const favoriteAlbums = getFavoriteAlbums();
+    const isFavorite = favoriteAlbums.some((a) => a.id === album.id);
+    if (isFavorite) {
+      saveFavoriteAlbum(album);
+      loadFavoriteAlbums();
+    } else {
+      removeFavoriteAlbum(album);
+    }
+  });
+  console.log('attached listener to', saveBtn);
   albumControls.appendChild(moreBtn);
   headerTime.appendChild(timeIcon);
   albumTracklistHeader.appendChild(headerNumber);
@@ -727,11 +744,10 @@ const displaySearch = async (e) => {
   e.preventDefault();
 
   const main = document.querySelector('main');
-
   const searchField = document.getElementById('search');
   const query = searchField.value;
-
   const token = await getToken();
+
   const res = await fetch(
     `https://api.spotify.com/v1/search?q=${encodeURIComponent(
       query
@@ -747,10 +763,12 @@ const displaySearch = async (e) => {
   const tracks = data.tracks.items;
 
   const content = createSearch(tracks);
+  const sidebar = createSidebar();
 
   main.innerHTML = '';
-  main.appendChild(createSidebar());
+  main.appendChild(sidebar);
   main.appendChild(content);
+  loadFavoriteAlbums();
 
   showResultsView();
 };
@@ -760,44 +778,42 @@ const displayMain = async () => {
 
   const token = await getToken();
 
-  const newReleasesRes = await fetch(`${BASE_URL}browse/new-releases?limit=50`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const newReleasesRes = await fetch(
+    `${BASE_URL}browse/new-releases?limit=50`,
+    {
+      headers: {Authorization: `Bearer ${token}`},
+    }
+  );
 
   const newReleasesData = await newReleasesRes.json();
 
   const newReleases = newReleasesData.albums.items;
 
   const content = createMain(newReleases);
+  const sidebar = createSidebar();
 
   main.innerHTML = '';
-  main.appendChild(createSidebar());
+  sidebar.innerHTML = '';
+  main.appendChild(sidebar);
   main.appendChild(content);
+  loadFavoriteAlbums();
 };
 
 const displayArtist = async () => {
   const params = new URLSearchParams(window.location.search);
   const artistId = params.get('id');
-
   const main = document.querySelector('main');
-
   const token = await getToken();
 
   const [artistRes, topTracksRes, topAlbumsRes] = await Promise.all([
     fetch(`${BASE_URL}artists/${encodeURIComponent(artistId)}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: {Authorization: `Bearer ${token}`},
     }),
     fetch(`${BASE_URL}artists/${encodeURIComponent(artistId)}/top-tracks`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: {Authorization: `Bearer ${token}`},
     }),
     fetch(`${BASE_URL}artists/${encodeURIComponent(artistId)}/albums?limit=8`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: {Authorization: `Bearer ${token}`},
     }),
   ]);
 
@@ -805,14 +821,18 @@ const displayArtist = async () => {
   const topTracksData = await topTracksRes.json();
   const topAlbumsData = await topAlbumsRes.json();
 
-  const tracks = topTracksData.tracks;
-  const albums = topAlbumsData.items;
-
-  const content = createArtist(artistData, tracks, albums);
+  const content = createArtist(
+    artistData,
+    topTracksData.tracks,
+    topAlbumsData.items
+  );
+  const sidebar = createSidebar();
 
   main.innerHTML = '';
-  main.appendChild(createSidebar());
+  sidebar.innerHTML = '';
+  main.appendChild(sidebar);
   main.appendChild(content);
+  loadFavoriteAlbums();
 };
 
 const displayAlbum = async () => {
@@ -846,10 +866,13 @@ const displayAlbum = async () => {
   const tracks = albumTracksData.items;
 
   const content = createAlbum(albumData, tracks);
+  const sidebar = createSidebar();
 
   main.innerHTML = '';
-  main.appendChild(createSidebar());
+  sidebar.innerHTML = '';
+  main.appendChild(sidebar);
   main.appendChild(content);
+  loadFavoriteAlbums();
 };
 
 const init = () => {
@@ -874,6 +897,7 @@ const init = () => {
   } else {
     console.warn('Page not recognized:', state.currentPage);
   }
+  loadFavoriteAlbums();
 };
 
 init();
