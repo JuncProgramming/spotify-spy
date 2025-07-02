@@ -7,9 +7,12 @@ export const getFavoriteAlbums = () => {
 
 export const loadFavoriteAlbums = () => {
   const sidebar = document.querySelector('.sidebar');
-  sidebar.innerHTML = ''; 
+  if (!sidebar) {
+    console.log('Sidebar element not found');
+    return;
+  }
+  sidebar.innerHTML = '';
   const albums = getFavoriteAlbums();
-  console.log('Loading favorite albums:', albums);
 
   albums.forEach((album) => {
     const albumLink = document.createElement('a');

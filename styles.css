@@ -129,6 +129,7 @@ button:hover {
 }
 
 .sidebar {
+  display: flex;
   width: 4rem;
   background: var(--dark-bg);
   border-radius: 1rem;
