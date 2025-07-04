@@ -16,11 +16,9 @@
   left: 0;
   right: 0;
   height: 40rem;
-  background: linear-gradient(
-    to bottom,
-    var(--album-accent, #1c1c1c),
-    transparent 90%
-  );
+  background: linear-gradient(to bottom,
+      var(--album-accent, #1c1c1c),
+      transparent 90%);
   z-index: -1;
   pointer-events: none;
 }
@@ -130,27 +128,38 @@ button:hover {
 
 .sidebar {
   display: flex;
-  width: 4rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 6rem;
+  height: auto;
   background: var(--dark-bg);
   border-radius: 1rem;
-  padding: 1rem;
+  padding: 0.25rem;
   overflow: auto;
-  gap: 1rem;
 }
 
 .side-tab {
+  background-color: transparent;
   width: 100%;
-  aspect-ratio: 1;
-  border-radius: 0.75rem;
-  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  border-radius: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .side-tab img {
-  width: 100%;
-  height: 100%;
+  border-radius: 0.75rem;
+  width: 85%;
+  height: 85%;
   object-fit: cover;
   object-position: center;
   display: block;
+}
+
+.side-tab:hover {
+  background: var(--light-bg);
 }
 
 h2 {
@@ -275,6 +284,7 @@ h2 {
     transform: translateY(20%);
     opacity: 0;
   }
+
   to {
     transform: translateY(0%);
     opacity: 1;
@@ -286,6 +296,7 @@ h2 {
     transform: translateY(0%);
     opacity: 1;
   }
+
   to {
     transform: translateY(20%);
     opacity: 0;
@@ -424,11 +435,9 @@ h2 {
   border-top-left-radius: 0.75rem;
   border-top-right-radius: 0.75rem;
   width: 100%;
-  background: linear-gradient(
-      135deg,
+  background: linear-gradient(135deg,
       rgba(28, 28, 28, 0.8),
-      rgba(18, 18, 18, 0.8)
-    ),
+      rgba(18, 18, 18, 0.8)),
     url('./media/default-cover.png');
   background-size: cover;
   background-position: center;
@@ -734,12 +743,7 @@ i.fa-clock {
 .album-track-row {
   display: grid;
   grid-template-columns:
-    3rem
-    1fr
-    50rem
-    3rem
-    2rem
-    1rem;
+    3rem 1fr 50rem 3rem 2rem 1rem;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
@@ -802,7 +806,7 @@ span.album-track-duration {
   margin: 0;
 }
 
-.spotify-card > h2 {
+.spotify-card>h2 {
   margin: 2.5rem 2rem 1rem 2rem;
   text-align: left;
 }
