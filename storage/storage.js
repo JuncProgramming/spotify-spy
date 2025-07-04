@@ -8,7 +8,7 @@ export const getFavoriteAlbums = () => {
 export const loadFavoriteAlbums = () => {
   const sidebar = document.querySelector('.sidebar');
   if (!sidebar) {
-    console.log('Sidebar element not found');
+    console.warn('Sidebar element not found');
     return;
   }
   sidebar.innerHTML = '';
@@ -34,7 +34,6 @@ export const saveFavoriteAlbum = (album) => {
   if (!albums.find((a) => a.id === album.id)) {
     albums.push(album);
     localStorage.setItem(ALBUMS_KEY, JSON.stringify(albums));
-    console.log('Album saved:', album);
   }
 };
 
