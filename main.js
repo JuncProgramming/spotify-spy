@@ -624,12 +624,12 @@ const createAlbum = (album, tracks) => {
   saveBtn.addEventListener('click', () => {
     const favoriteAlbums = getFavoriteAlbums();
     const isFavorite = favoriteAlbums.some((a) => a.id === album.id);
-    if (isFavorite) {
+    if (!isFavorite) {
       saveFavoriteAlbum(album);
-      loadFavoriteAlbums();
     } else {
       removeFavoriteAlbum(album);
     }
+    loadFavoriteAlbums();
   });
   albumControls.appendChild(moreBtn);
   headerTime.appendChild(timeIcon);
@@ -896,7 +896,6 @@ const init = () => {
   } else {
     console.warn('Page not recognized:', state.currentPage);
   }
-  loadFavoriteAlbums();
 };
 
 init();
