@@ -713,6 +713,13 @@ a.album-play-btn:hover {
   align-items: flex-end;
 }
 
+.album-tracklist-col.number {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 1rem;
+}
+
 span.album-tracklist-col.number,
 span.album-tracklist-col.title,
 div.album-tracklist-col.plays,
@@ -737,6 +744,36 @@ i.fa-clock {
 .album-save-btn.saved i {
   color: var(--very-dark-bg);
 }
+
+.save-btn i {
+  width: 1rem;
+  height: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.9rem;
+}
+
+.save-btn.saved i {
+  background-color: var(--album-btn-green);
+  color: var(--very-dark-bg);
+}
+
+
+.save-btn i.fa-check {
+  background-color: var(--album-btn-green);
+  color: var(--very-dark-bg);
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  line-height: 1.5rem;
+}
+
 
 .album-tracklist-container {
   width: 98%;
