@@ -54,17 +54,6 @@ const showDetailsView = () => {
   if (details) details.style.display = 'flex';
 };
 
-const addToFavorites = (saveIcon) => {
-  saveIcon.addEventListener('click', () => {
-    const isFavorite = saveIcon.classList.toggle('isFavorite');
-    if (isFavorite) {
-      saveIcon.classList.replace('fa-circle-plus', 'fa-circle-check');
-    } else {
-      saveIcon.classList.replace('fa-circle-check', 'fa-circle-plus');
-    }
-  });
-};
-
 const createDotSpacer = () => {
   const dot = document.createElement('span');
   dot.textContent = '•';
@@ -245,8 +234,6 @@ const createTrackCard = (track, number = null) => {
 
   const saveIcon = document.createElement('i');
   saveIcon.classList.add('fa-solid', 'fa-circle-plus', 'scalable');
-
-  addToFavorites(saveIcon);
 
   const duration = document.createElement('span');
   duration.textContent = convertDuration(track.duration_ms);
@@ -582,11 +569,16 @@ const createAlbum = (album, tracks) => {
   playBtn.href = tracks[0].external_urls.spotify;
   playBtn.target = '_blank';
 
+  const isFavorite = getFavoriteAlbums().some((a) => a.id === album.id);
+  const saveIcon = document.createElement('i');
+  saveIcon.classList.add('fa-solid', isFavorite ? 'fa-check' : 'fa-plus');
+
   const saveBtn = document.createElement('button');
   saveBtn.type = 'button';
   saveBtn.classList.add('album-btn', 'album-save-btn');
-  const saveIcon = document.createElement('i');
-  saveIcon.classList.add('fa-solid', 'fa-plus');
+  if (isFavorite) {
+    saveBtn.classList.add('saved');
+  }
 
   const moreBtn = document.createElement('button');
   moreBtn.classList.add('album-btn', 'album-more-btn');
@@ -626,8 +618,12 @@ const createAlbum = (album, tracks) => {
     const isFavorite = favoriteAlbums.some((a) => a.id === album.id);
     if (!isFavorite) {
       saveFavoriteAlbum(album);
+      saveIcon.classList.replace('fa-plus', 'fa-check');
+      saveBtn.classList.add('saved');
     } else {
       removeFavoriteAlbum(album);
+      saveIcon.classList.replace('fa-check', 'fa-plus');
+      saveBtn.classList.remove('saved');
     }
     loadFavoriteAlbums();
   });
