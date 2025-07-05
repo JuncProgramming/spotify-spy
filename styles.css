@@ -1,6 +1,8 @@
 :root {
   --primary-green: #1db954;
   --hover-green: #1ed760;
+  --album-btn-green: #1fe063;
+  --album-btn-hover: #20e766;
   --light-bg: #333;
   --dark-bg: #151515;
   --very-dark-bg: #000000;
@@ -654,7 +656,7 @@ a.album-play-btn {
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50%;
-  background: var(--primary-green);
+  background: var(--album-btn-green);
   color: var(--very-dark-bg);
   font-size: 2rem;
   border: none;
@@ -678,7 +680,7 @@ a.album-play-btn:hover i {
 
 a.album-play-btn:hover {
   text-decoration: none;
-  background: var(--hover-green);
+  background: var(--album-btn-hover);
   transform: scale(1.01);
 }
 
@@ -716,6 +718,24 @@ span.album-tracklist-col.title,
 div.album-tracklist-col.plays,
 i.fa-clock {
   color: #a3a3a3ad;
+}
+
+.fa-check {
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.album-save-btn.saved {
+  border: none;
+  background: var(--album-btn-green);
+  color: var(--very-dark-bg);
+}
+
+.album-save-btn.saved:hover {
+  background-color: var(--album-btn-hover);
+}
+
+.album-save-btn.saved i {
+  color: var(--very-dark-bg);
 }
 
 .album-tracklist-container {
@@ -916,4 +936,22 @@ div.album-card-info {
 .album-grid-container {
   width: 100%;
   box-sizing: border-box;
+}
+
+a.search-title-link {
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  position: relative;
+  text-align: center;
+  color: var(--primary-green);
+  font-size: 2rem;
+  font-weight: bold;
+  text-decoration: none;
+  font-family: 'Segoe UI', sans-serif;
+  display: inline-block;
+}
+
+a.search-title-link:hover {
+  color: var(--hover-green);
 }
