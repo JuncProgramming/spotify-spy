@@ -1,12 +1,11 @@
 import {
   getFavoriteAlbums,
-  loadFavoriteAlbums,
   saveFavoriteAlbum,
   removeFavoriteAlbum,
   getFavoriteTracks,
-  loadFavoriteTracks,
   saveFavoriteTrack,
   removeFavoriteTrack,
+  loadSidebar,
 } from './storage/storage.js';
 
 const state = {
@@ -57,6 +56,39 @@ const showDetailsView = () => {
   if (results) results.style.display = 'none';
   if (details) details.style.display = 'flex';
 };
+
+const onTrackSaveClick = (saveButton, saveIcon, track) => {
+  saveButton.addEventListener('click', () => {
+    const isFavorite = getFavoriteTracks().some((t) => t.id === track.id);
+    if (!isFavorite) {
+      saveFavoriteTrack(track);
+      saveIcon.classList.replace('fa-circle-plus', 'fa-check');
+      saveButton.classList.add('saved');
+    } else {
+      removeFavoriteTrack(track);
+      saveIcon.classList.replace('fa-check', 'fa-circle-plus');
+      saveButton.classList.remove('saved');
+    }
+    loadSidebar();
+  });
+};
+
+const onAlbumSaveClick = (saveButton, saveIcon, album) => {
+  saveButton.addEventListener('click', () => {
+    const isFavorite = getFavoriteAlbums().some((a) => a.id === album.id);
+    if (!isFavorite) {
+      saveFavoriteAlbum(album);
+      saveIcon.classList.replace('fa-circle-plus', 'fa-circle-check');
+      saveButton.classList.add('saved');
+    } else {
+      removeFavoriteAlbum(album);
+      saveIcon.classList.replace('fa-circle-check', 'fa-circle-plus');
+      saveButton.classList.remove('saved');
+    }
+    loadSidebar();
+  });
+};
+
 
 const createDotSpacer = () => {
   const dot = document.createElement('span');
@@ -261,25 +293,12 @@ const createTrackCard = (track, number = null) => {
   info.appendChild(title);
   info.appendChild(artistsContainer);
   saveBtn.appendChild(saveIcon);
-  saveBtn.addEventListener('click', () => {
-    const favoriteTracks = getFavoriteTracks();
-    const isFavorite = favoriteTracks.some((t) => t.id === track.id);
-    if (!isFavorite) {
-      saveFavoriteTrack(track);
-      saveIcon.classList.replace('fa-plus', 'fa-check');
-      saveBtn.classList.add('saved');
-    } else {
-      removeFavoriteTrack(track);
-      saveIcon.classList.replace('fa-check', 'fa-plus');
-      saveBtn.classList.remove('saved');
-    }
-    loadFavoriteTracks();
-  });
   elipsis.appendChild(elipsisIcon);
   imgContainer.appendChild(img);
   row.appendChild(imgContainer);
   row.appendChild(info);
   row.appendChild(saveBtn);
+  onTrackSaveClick(saveBtn, saveIcon, track);
   row.appendChild(duration);
   row.appendChild(elipsis);
 
@@ -641,20 +660,7 @@ const createAlbum = (album, tracks) => {
   moreBtn.appendChild(moreIcon);
   albumControls.appendChild(playBtn);
   albumControls.appendChild(saveBtn);
-  saveBtn.addEventListener('click', () => {
-    const favoriteAlbums = getFavoriteAlbums();
-    const isFavorite = favoriteAlbums.some((a) => a.id === album.id);
-    if (!isFavorite) {
-      saveFavoriteAlbum(album);
-      saveIcon.classList.replace('fa-plus', 'fa-check');
-      saveBtn.classList.add('saved');
-    } else {
-      removeFavoriteAlbum(album);
-      saveIcon.classList.replace('fa-check', 'fa-plus');
-      saveBtn.classList.remove('saved');
-    }
-    loadFavoriteAlbums();
-  });
+  onAlbumSaveClick(saveBtn, saveIcon, album);
   albumControls.appendChild(moreBtn);
   headerTime.appendChild(timeIcon);
   albumTracklistHeader.appendChild(headerNumber);
@@ -755,26 +761,13 @@ const createAlbum = (album, tracks) => {
     numberContainer.appendChild(number);
     infoDiv.appendChild(trackName);
     infoDiv.appendChild(artistsContainer);
-    saveBtn.addEventListener('click', () => {
-      const favoriteTracks = getFavoriteTracks();
-      const isFavorite = favoriteTracks.some((t) => t.id === track.id);
-      if (!isFavorite) {
-        saveFavoriteTrack(track);
-        saveIcon.classList.replace('fa-plus', 'fa-check');
-        saveBtn.classList.add('saved');
-      } else {
-        removeFavoriteTrack(track);
-        saveIcon.classList.replace('fa-check', 'fa-plus');
-        saveBtn.classList.remove('saved');
-      }
-      loadFavoriteTracks();
-    });
     saveBtn.appendChild(saveIcon);
     elipsisBtn.appendChild(elipsisIcon);
     albumTrackRow.appendChild(numberContainer);
     albumTrackRow.appendChild(infoDiv);
     albumTrackRow.appendChild(playInfo);
     albumTrackRow.appendChild(saveBtn);
+    onTrackSaveClick(saveBtn, saveIcon, track);
     albumTrackRow.appendChild(trackDuration);
     albumTrackRow.appendChild(elipsisBtn);
     albumTracklist.appendChild(albumTrackRow);
@@ -1007,7 +1000,7 @@ const createFavorites = (tracks) => {
         saveIcon.classList.replace('fa-check', 'fa-circle-plus');
         saveBtn.classList.remove('saved');
       }
-      loadFavoriteTracks();
+      loadSidebar();
     });
     saveBtn.appendChild(saveIcon);
     elipsisBtn.appendChild(elipsisIcon);
@@ -1056,8 +1049,7 @@ const displaySearch = async (e) => {
   main.innerHTML = '';
   main.appendChild(sidebar);
   main.appendChild(content);
-  loadFavoriteAlbums();
-  loadFavoriteTracks();
+  loadSidebar();
 
   showResultsView();
 };
@@ -1085,8 +1077,7 @@ const displayMain = async () => {
   sidebar.innerHTML = '';
   main.appendChild(sidebar);
   main.appendChild(content);
-  loadFavoriteAlbums();
-  loadFavoriteTracks();
+  loadSidebar();
 };
 
 const displayArtist = async () => {
@@ -1122,8 +1113,7 @@ const displayArtist = async () => {
   sidebar.innerHTML = '';
   main.appendChild(sidebar);
   main.appendChild(content);
-  loadFavoriteAlbums();
-  loadFavoriteTracks();
+  loadSidebar();
 };
 
 const displayAlbum = async () => {
@@ -1163,8 +1153,7 @@ const displayAlbum = async () => {
   sidebar.innerHTML = '';
   main.appendChild(sidebar);
   main.appendChild(content);
-  loadFavoriteAlbums();
-  loadFavoriteTracks();
+  loadSidebar();
 };
 
 const displayFavorites = () => {
@@ -1179,8 +1168,7 @@ const displayFavorites = () => {
   sidebar.innerHTML = '';
   main.appendChild(sidebar);
   main.appendChild(content);
-  loadFavoriteAlbums();
-  loadFavoriteTracks();
+  loadSidebar();
 };
 
 const init = () => {
