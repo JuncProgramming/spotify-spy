@@ -12,7 +12,14 @@
 
 <body>
   <div class="title-container">
-    <div class="navigation-btns"></div>
+    <div class="navigation-btns">
+      <button class="nav-btn back-btn" aria-label="Go back">
+        <i class="fa-solid fa-angle-left"></i>
+      </button>
+      <button class="nav-btn forward-btn" aria-label="Go forward">
+        <i class="fa-solid fa-angle-right"></i>
+      </button>
+    </div>
     <form id="form">
       <input id="search" placeholder="Search track..." />
     </form>
@@ -20,6 +27,7 @@
   </div>
   <main></main>
   <script type="module" src="./main.js"></script>
+  <script src="navigation/navigation.js" defer></script>
 </body>
 
 </html>
