@@ -76,6 +76,27 @@ main {
   background: var(--very-dark-bg);
 }
 
+.navigation-btns {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 1.5rem;
+  color: var(--muted-text);
+  transition: color 0.2s ease;
+}
+
+.nav-btn:hover {
+  background-color: transparent;
+  color: var(--light-text)
+}
+
 #form {
   position: absolute;
   left: 50%;
@@ -760,7 +781,6 @@ i.fa-clock {
   color: var(--very-dark-bg);
 }
 
-
 .save-btn i.fa-check {
   background-color: var(--album-btn-green);
   color: var(--very-dark-bg);
@@ -773,7 +793,6 @@ i.fa-clock {
   font-size: 0.6rem;
   line-height: 1.5rem;
 }
-
 
 .album-tracklist-container {
   width: 98%;
