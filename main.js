@@ -89,7 +89,6 @@ const onAlbumSaveClick = (saveButton, saveIcon, album) => {
   });
 };
 
-
 const createDotSpacer = () => {
   const dot = document.createElement('span');
   dot.textContent = '•';
@@ -434,20 +433,31 @@ const createArtist = (data, tracks = [], albums = []) => {
 
   const hero = document.createElement('div');
   const bgImage = data.images?.[0]?.url;
-  hero.classList.add('artist-hero');
+
   if (bgImage) {
-    hero.style.backgroundImage = `
-      linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-      url(${bgImage})
+    const imgForColor = new Image();
+    imgForColor.crossOrigin = 'anonymous';
+    imgForColor.src = bgImage;
+
+    imgForColor.onload = () => {
+      const colorThief = new ColorThief();
+      const [r, g, b] = colorThief.getColor(imgForColor);
+
+      hero.style.backgroundImage = `
+      linear-gradient(
+        to bottom,
+        rgba(${r}, ${g}, ${b}, 1) 0%,
+        rgba(${r}, ${g}, ${b}, 0.7) 40%,
+        rgba(${r}, ${g}, ${b}, 0.3) 75%,
+        rgba(${r}, ${g}, ${b}, 0.1) 100%
+      )
     `;
+    };
   } else {
     hero.style.backgroundImage = `
-      linear-gradient(135deg, #1c1c1c, #121212)
-    `;
+    linear-gradient(to bottom, #1c1c1c, #121212)
+  `;
   }
-  hero.style.backgroundSize = 'cover';
-  hero.style.backgroundPosition = 'center';
-  hero.style.backgroundRepeat = 'no-repeat';
 
   const heroInner = document.createElement('div');
   heroInner.classList.add('hero-inner');
