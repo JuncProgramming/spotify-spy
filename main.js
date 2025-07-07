@@ -428,6 +428,8 @@ const createMain = (newReleases) => {
 };
 
 const createArtist = (data, tracks = [], albums = []) => {
+  document.title = data.name || 'Spotify Spy';
+
   const spotifyCard = document.createElement('div');
   spotifyCard.classList.add('spotify-card');
 
@@ -473,8 +475,16 @@ const createArtist = (data, tracks = [], albums = []) => {
   const p = document.createElement('p');
   p.classList.add('artist-verified');
   const verifiedText = document.createTextNode('Verified artist');
-  const verifiedIcon = document.createElement('i');
-  verifiedIcon.classList.add('fa-solid', 'fa-certificate');
+
+  const badgeContainer = document.createElement('span');
+  badgeContainer.classList.add('verified-badge-wrapper');
+
+  const badgeIcon = document.createElement('i');
+  badgeIcon.classList.add('fa-solid', 'fa-certificate');
+
+  const checkIcon = document.createElement('i');
+  checkIcon.classList.add('fa-solid', 'fa-check', 'check-inside');
+  checkIcon.setAttribute('aria-hidden', 'true');
 
   const name = document.createElement('h1');
   name.classList.add('artist-name');
@@ -507,7 +517,9 @@ const createArtist = (data, tracks = [], albums = []) => {
     albumsContainer.appendChild(createAlbumCover(album));
   });
 
-  p.appendChild(verifiedIcon);
+  badgeContainer.appendChild(badgeIcon);
+  badgeContainer.appendChild(checkIcon);
+  p.appendChild(badgeContainer);
   p.append(verifiedText);
   heroInfo.appendChild(p);
   heroInfo.appendChild(name);
@@ -524,6 +536,8 @@ const createArtist = (data, tracks = [], albums = []) => {
 };
 
 const createAlbum = (album, tracks) => {
+  document.title = `"${album.name}"` || 'Spotify Spy';
+
   const spotifyCard = document.createElement('div');
   spotifyCard.classList.add('spotify-card');
 
@@ -654,11 +668,11 @@ const createAlbum = (album, tracks) => {
 
   const headerTitle = document.createElement('span');
   headerTitle.classList.add('album-tracklist-col', 'title');
-  headerTitle.textContent = 'Tytuł';
+  headerTitle.textContent = 'Title';
 
   const headerPlays = document.createElement('div');
   headerPlays.classList.add('album-tracklist-col', 'plays');
-  headerPlays.textContent = 'Odtworzenia';
+  headerPlays.textContent = 'Plays';
 
   const headerTime = document.createElement('div');
   headerTime.classList.add('album-tracklist-col', 'time');
@@ -886,11 +900,11 @@ const createFavorites = (tracks) => {
 
   const headerTitle = document.createElement('span');
   headerTitle.classList.add('album-tracklist-col', 'title');
-  headerTitle.textContent = 'Tytuł';
+  headerTitle.textContent = 'Title';
 
-  const headerPlays = document.createElement('div');
-  headerPlays.classList.add('album-tracklist-col', 'plays');
-  headerPlays.textContent = 'Odtworzenia';
+  const headerPlays = document.createElement('span');
+  headerPlays.classList.add('album-tracklist-col', 'album');
+  headerPlays.textContent = 'Album';
 
   const headerTime = document.createElement('div');
   headerTime.classList.add('album-tracklist-col', 'time');
@@ -965,12 +979,10 @@ const createFavorites = (tracks) => {
       }
     });
 
-    const playInfo = document.createElement('div');
-    playInfo.classList.add('play-info');
-    // Random ass number, because the API doesn't return it :(
-    playInfo.textContent = (
-      Math.floor(Math.random() * (9000000 - 1000)) + 1000
-    ).toLocaleString();
+    const albumInfo = document.createElement('a');
+    albumInfo.classList.add('album-name', 'play-info');
+    albumInfo.href = `/album.html?id=${track.album.id}`;
+    albumInfo.textContent = track.album.name;
 
     const isFavorite = getFavoriteTracks().some((t) => t.id === track.id);
     const saveIcon = document.createElement('i');
@@ -1016,7 +1028,7 @@ const createFavorites = (tracks) => {
     elipsisBtn.appendChild(elipsisIcon);
     albumTrackRow.appendChild(numberContainer);
     albumTrackRow.appendChild(infoDiv);
-    albumTrackRow.appendChild(playInfo);
+    albumTrackRow.appendChild(albumInfo);
     albumTrackRow.appendChild(saveBtn);
     albumTrackRow.appendChild(trackDuration);
     albumTrackRow.appendChild(elipsisBtn);
