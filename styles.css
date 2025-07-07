@@ -164,7 +164,6 @@ button:hover {
 
 .side-tab {
   background-color: transparent;
-  width: 100%;
   aspect-ratio: 1 / 1;
   border-radius: 0.9rem;
   display: flex;
@@ -235,6 +234,7 @@ h2 {
 }
 
 .track-info h3 {
+  font-weight: normal;
   margin: 0;
   font-size: 1.1rem;
 }
@@ -493,9 +493,8 @@ h2 {
 .artist-verified {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 1.2rem;
-  margin: 0;
+  gap: 0.8rem;
+  margin: 1rem 0;
   padding: 0;
   line-height: normal;
 }
@@ -503,6 +502,26 @@ h2 {
 .artist-verified i {
   color: #247ec7;
   font-size: 1.5em;
+}
+
+.verified-badge-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+  font-size: 1em;
+}
+
+.verified-badge-wrapper .check-inside {
+  position: absolute;
+  font-size: 0.7em;
+  color: white;
+  line-height: 1.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .artist-name {
@@ -516,7 +535,7 @@ h2 {
 .artist-followers {
   font-size: 1rem;
   color: var(--light-text);
-  margin: 0.5rem 0 0 0;
+  margin: 1rem 0 0 0;
 }
 
 .elipsis-btn,
@@ -741,6 +760,19 @@ a.album-play-btn:hover {
   margin-right: 1rem;
 }
 
+.album-tracklist-col.album,
+.album-name {
+  color: #a3a3a3ad;
+  text-align: left;
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+.album-track-row a.album-name.play-info:hover {
+  color: var(--light-text);
+  text-decoration: underline;
+}
+
 span.album-tracklist-col.number,
 span.album-tracklist-col.title,
 div.album-tracklist-col.plays,
@@ -813,6 +845,10 @@ i.fa-clock {
   text-align: right;
   display: block;
   padding-right: 32rem;
+}
+
+a.album-name.play-info {
+  text-align: left;
 }
 
 .album-tracklist-header,
@@ -922,7 +958,6 @@ img.album-card-cover {
 
 .album-card-image-container {
   position: relative;
-  width: 100%;
   aspect-ratio: 1/1;
   display: block;
 }
@@ -977,21 +1012,22 @@ div.album-card-info {
 }
 
 #new-releases-container {
-  padding: 1rem 0 0 2rem;
+  padding: 1rem 1rem 0 2rem;
   box-sizing: border-box;
 }
 
 .album-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
-  justify-content: start;
-  gap: 1.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 0;
   box-sizing: border-box;
+  justify-content: flex-start;
 }
 
 .album-grid-container {
   width: 100%;
   box-sizing: border-box;
+  padding: 0;
 }
 
 a.search-title-link {
