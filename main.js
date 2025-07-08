@@ -58,8 +58,16 @@ const showDetailsView = () => {
 };
 
 const onTrackSaveClick = (saveButton, saveIcon, track) => {
+  if (!saveButton || !saveIcon || !track) {
+    console.warn('Missing argument in onTrackSaveClick:', {
+      saveButton,
+      saveIcon,
+      track,
+    });
+    return;
+  }
   saveButton.addEventListener('click', () => {
-    const isFavorite = getFavoriteTracks().some((t) => t.id === track.id);
+    const isFavorite = getFavoriteTracks().some((t) => t?.id === track.id);
     if (!isFavorite) {
       saveFavoriteTrack(track);
       saveIcon.classList.replace('fa-circle-plus', 'fa-check');
@@ -74,8 +82,16 @@ const onTrackSaveClick = (saveButton, saveIcon, track) => {
 };
 
 const onAlbumSaveClick = (saveButton, saveIcon, album) => {
+  if (!saveButton || !saveIcon || !album) {
+    console.warn('Missing argument in onAlbumSaveClick:', {
+      saveButton,
+      saveIcon,
+      album,
+    });
+    return;
+  }
   saveButton.addEventListener('click', () => {
-    const isFavorite = getFavoriteAlbums().some((a) => a.id === album.id);
+    const isFavorite = getFavoriteAlbums().some((a) => a?.id === album.id);
     if (!isFavorite) {
       saveFavoriteAlbum(album);
       saveIcon.classList.replace('fa-circle-plus', 'fa-circle-check');
@@ -108,6 +124,11 @@ const createSidebar = () => {
 };
 
 const createBestResultCard = (track) => {
+  if (!track) {
+    console.warn(`Missing track in createBestResultCard: ${track}`);
+    return;
+  }
+
   const bestTrackRow = document.createElement('div');
   bestTrackRow.classList.add('best-track-card');
 
@@ -116,20 +137,20 @@ const createBestResultCard = (track) => {
 
   const img = document.createElement('img');
   img.classList.add('cover-img');
-  img.src = track.album.images[0]?.url || './media/default-cover.png';
+  img.src = track.album?.images[0]?.url || './media/default-cover.png';
   img.alt = track.name ? `${track.name} cover` : 'Cover';
   img.style.display = 'block';
   img.loading = 'lazy';
 
   const play = document.createElement('a');
   play.classList.add('green-play-btn');
-  play.href = track.external_urls.spotify;
+  play.href = track.external_urls?.spotify || '#';
   play.target = '_blank';
 
   play.addEventListener('click', (e) => {
     e.preventDefault();
-    window.open(track.album.external_urls.spotify, '_blank');
-    window.location.href = `/album.html?id=${track.album.id}`;
+    window.open(track.album?.external_urls?.spotify, '_blank');
+    window.location.href = `/album.html?id=${track.album?.id}`;
   });
 
   const playIcon = document.createElement('i');
@@ -143,10 +164,10 @@ const createBestResultCard = (track) => {
 
   const artistsContainer = document.createElement('div');
 
-  track.artists.forEach((artist, index) => {
+  track.artists?.forEach((artist, index) => {
     const artistText = document.createElement('a');
     artistText.textContent = artist.name || 'artist';
-    artistText.href = `/artist.html?id=${artist.id}`;
+    artistText.href = artist.id ? `/artist.html?id=${artist.id}` : '#';
     artistText.classList.add('artist');
     artistsContainer.appendChild(artistText);
 
@@ -181,6 +202,11 @@ const createBestResultCard = (track) => {
 };
 
 const createTrackCard = (track, number = null) => {
+  if (!track) {
+    console.warn(`Missing track in createTrackCard: ${track}`);
+    return;
+  }
+
   const row = document.createElement('div');
   row.classList.add('track-row');
 
@@ -190,7 +216,7 @@ const createTrackCard = (track, number = null) => {
   const img = document.createElement('img');
   img.style.position = 'relative';
   img.style.zIndex = '1';
-  img.src = track.album.images[2]?.url || './media/default-cover.png';
+  img.src = track.album?.images[2]?.url || './media/default-cover.png';
   img.alt = track.name ? `${track.name} cover` : 'Cover';
   img.style.display = 'block';
   img.loading = 'lazy';
@@ -210,7 +236,7 @@ const createTrackCard = (track, number = null) => {
     play.style.top = '45%';
     play.style.left = '40%';
     play.style.transform = 'translate(-50%, -50%)';
-    play.href = track.external_urls.spotify;
+    play.href = track.external_urls?.spotify || '#';
     play.target = '_blank';
 
     const playIcon = document.createElement('i');
@@ -230,7 +256,7 @@ const createTrackCard = (track, number = null) => {
     play.style.top = '45%';
     play.style.left = '40%';
     play.style.transform = 'translate(-50%, -50%)';
-    play.href = track.external_urls.spotify;
+    play.href = track.external_urls?.spotify || '#';
     play.target = '_blank';
 
     const playIcon = document.createElement('i');
@@ -248,10 +274,10 @@ const createTrackCard = (track, number = null) => {
 
   const artistsContainer = document.createElement('div');
 
-  track.artists.forEach((artist, index) => {
+  track.artists?.forEach((artist, index) => {
     const artistText = document.createElement('a');
     artistText.textContent = artist.name || 'artist';
-    artistText.href = `/artist.html?id=${artist.id}`;
+    artistText.href = artist.id ? `/artist.html?id=${artist.id}` : '#';
     artistText.classList.add('artist');
     artistsContainer.appendChild(artistText);
 
@@ -264,12 +290,10 @@ const createTrackCard = (track, number = null) => {
     }
   });
 
-  const saveIcon = document.createElement('i');
-  const isFavorite = getFavoriteTracks().some((t) => t.id === track.id);
-  saveIcon.classList.add('fa-solid', isFavorite ? 'fa-check' : 'fa-plus');
+  const isFavorite = getFavoriteTracks().some((t) => t?.id === track.id);
 
   const saveBtn = document.createElement('button');
-  saveBtn.type = 'button';
+  const saveIcon = document.createElement('i');
   saveBtn.classList.add('save-btn');
   if (isFavorite) {
     saveBtn.classList.add('saved');
@@ -305,9 +329,14 @@ const createTrackCard = (track, number = null) => {
 };
 
 const createAlbumCover = (album) => {
+  if (!album) {
+    console.warn(`Missing album in createAlbumCover: ${album}`);
+    return;
+  }
+
   const card = document.createElement('a');
   card.classList.add('album-card');
-  card.href = `/album.html?id=${album.id}`;
+  card.href = album.id ? `/album.html?id=${album.id}` : '#';
 
   const imageContainer = document.createElement('div');
   imageContainer.classList.add('album-card-image-container');
@@ -323,8 +352,8 @@ const createAlbumCover = (album) => {
 
   play.addEventListener('click', (e) => {
     e.preventDefault();
-    window.open(album.external_urls.spotify, '_blank');
-    window.location.href = `/album.html?id=${album.id}`;
+    window.open(album.external_urls?.spotify, '_blank');
+    window.location.href = album.id ? `/album.html?id=${album.id}` : '#';
   });
 
   const playIcon = document.createElement('i');
@@ -369,6 +398,18 @@ const createSearch = (tracks) => {
   const searchResults = document.createElement('div');
   searchResults.classList.add('search-results');
 
+  if (!tracks || tracks.length === 0) {
+    console.warn(`Missing tracks in createSearch: ${tracks}`);
+
+    const emptyMessage = document.createElement('p');
+    emptyMessage.classList.add('empty-message');
+    emptyMessage.textContent = 'No results found';
+
+    searchResults.appendChild(emptyMessage);
+    spotifyCard.appendChild(searchResults);
+    return spotifyCard;
+  }
+
   const bestTrackContainer = document.createElement('div');
   bestTrackContainer.id = 'best-track-container';
 
@@ -390,7 +431,6 @@ const createSearch = (tracks) => {
 
   bestTrackContainer.appendChild(bestTrackHeader);
   bestTrackContainer.appendChild(bestCard);
-  spotifyCard.appendChild(bestTrackContainer);
   searchResults.appendChild(bestTrackContainer);
   searchResults.appendChild(tracksContainer);
   spotifyCard.appendChild(searchResults);
@@ -402,8 +442,19 @@ const createMain = (newReleases) => {
   const spotifyCard = document.createElement('div');
   spotifyCard.classList.add('spotify-card');
 
-  const newRealeasesContainer = document.createElement('div');
-  newRealeasesContainer.id = 'new-releases-container';
+  if (!newReleases || newReleases.length === 0) {
+    console.warn(`Missing new releases in createMain: ${newReleases}`);
+
+    const emptyMessage = document.createElement('p');
+    emptyMessage.classList.add('empty-message');
+    emptyMessage.textContent = 'No new releases found';
+
+    spotifyCard.appendChild(emptyMessage);
+    return spotifyCard;
+  }
+
+  const newReleasesContainer = document.createElement('div');
+  newReleasesContainer.id = 'new-releases-container';
 
   const sectionHeader = document.createElement('h2');
   sectionHeader.textContent = 'New Releases';
@@ -420,21 +471,32 @@ const createMain = (newReleases) => {
   });
 
   albumGridContainer.appendChild(albumGrid);
-  newRealeasesContainer.appendChild(sectionHeader);
-  newRealeasesContainer.appendChild(albumGridContainer);
-  spotifyCard.appendChild(newRealeasesContainer);
+  newReleasesContainer.appendChild(sectionHeader);
+  newReleasesContainer.appendChild(albumGridContainer);
+  spotifyCard.appendChild(newReleasesContainer);
 
   return spotifyCard;
 };
 
-const createArtist = (data, tracks = [], albums = []) => {
-  document.title = data.name || 'Spotify Spy';
-
+const createArtist = (artist, tracks = [], albums = []) => {
   const spotifyCard = document.createElement('div');
   spotifyCard.classList.add('spotify-card');
 
+  if (!artist) {
+    console.warn(`Missing artist in createArtist: ${artist}`);
+
+    const emptyMessage = document.createElement('p');
+    emptyMessage.classList.add('empty-message');
+    emptyMessage.textContent = 'No artist found';
+
+    spotifyCard.appendChild(emptyMessage);
+    return spotifyCard;
+  }
+
+  document.title = artist.name || 'Spotify Spy';
+
   const hero = document.createElement('div');
-  const bgImage = data.images?.[0]?.url;
+  const bgImage = artist.images?.[0]?.url;
 
   if (bgImage) {
     const imgForColor = new Image();
@@ -466,14 +528,14 @@ const createArtist = (data, tracks = [], albums = []) => {
 
   const image = document.createElement('img');
   image.classList.add('artist-hero-img');
-  image.src = data.images?.[1]?.url || './media/default-cover.png';
-  image.alt = data.name ? `Picture of ${data.name}` : 'Artist picture';
+  image.src = artist.images?.[1]?.url || './media/default-cover.png';
+  image.alt = artist.name ? `Picture of ${artist.name}` : 'Artist picture';
 
   const heroInfo = document.createElement('div');
   heroInfo.classList.add('artist-hero-info');
 
-  const p = document.createElement('p');
-  p.classList.add('artist-verified');
+  const verifiedWrapper = document.createElement('p');
+  verifiedWrapper.classList.add('artist-verified');
   const verifiedText = document.createTextNode('Verified artist');
 
   const badgeContainer = document.createElement('span');
@@ -488,58 +550,74 @@ const createArtist = (data, tracks = [], albums = []) => {
 
   const name = document.createElement('h1');
   name.classList.add('artist-name');
-  name.textContent = data.name;
+  name.textContent = artist.name;
 
   const followers = document.createElement('p');
   followers.classList.add('artist-followers');
   followers.textContent = `${
-    data.followers?.total?.toLocaleString() ?? ''
+    artist.followers?.total?.toLocaleString() ?? 'Unknown number of'
   } listeners this month`;
 
-  const popularHeader = document.createElement('h2');
-  popularHeader.textContent = 'Popular';
+  spotifyCard.appendChild(hero);
 
-  const popularTracksContainer = document.createElement('div');
-  popularTracksContainer.id = 'popular-tracks-container';
-  popularTracksContainer.appendChild(popularHeader);
+  if (tracks.length) {
+    const popularHeader = document.createElement('h2');
+    popularHeader.textContent = 'Popular';
 
-  tracks.forEach((track, index) => {
-    popularTracksContainer.appendChild(createTrackCard(track, index + 1));
-  });
+    const popularTracksContainer = document.createElement('div');
+    popularTracksContainer.id = 'popular-tracks-container';
+    popularTracksContainer.appendChild(popularHeader);
 
-  const discographyHeader = document.createElement('h2');
-  discographyHeader.textContent = 'Discography';
+    tracks?.forEach((track, index) => {
+      popularTracksContainer.appendChild(createTrackCard(track, index + 1));
+    });
+    spotifyCard.appendChild(popularTracksContainer);
+  }
 
-  const albumsContainer = document.createElement('div');
-  albumsContainer.id = 'artist-albums-container';
+  if (albums.length) {
+    const discographyHeader = document.createElement('h2');
+    discographyHeader.textContent = 'Discography';
 
-  albums.forEach((album) => {
-    albumsContainer.appendChild(createAlbumCover(album));
-  });
+    const albumsContainer = document.createElement('div');
+    albumsContainer.id = 'artist-albums-container';
+    spotifyCard.appendChild(discographyHeader);
+
+    albums?.forEach((album) => {
+      albumsContainer.appendChild(createAlbumCover(album));
+    });
+    spotifyCard.appendChild(albumsContainer);
+  }
 
   badgeContainer.appendChild(badgeIcon);
   badgeContainer.appendChild(checkIcon);
-  p.appendChild(badgeContainer);
-  p.append(verifiedText);
-  heroInfo.appendChild(p);
+  verifiedWrapper.appendChild(badgeContainer);
+  verifiedWrapper.append(verifiedText);
+  heroInfo.appendChild(verifiedWrapper);
   heroInfo.appendChild(name);
   heroInfo.appendChild(followers);
   heroInner.appendChild(image);
   heroInner.appendChild(heroInfo);
   hero.appendChild(heroInner);
-  spotifyCard.appendChild(hero);
-  spotifyCard.appendChild(popularTracksContainer);
-  spotifyCard.appendChild(discographyHeader);
-  spotifyCard.appendChild(albumsContainer);
 
   return spotifyCard;
 };
 
 const createAlbum = (album, tracks) => {
-  document.title = `"${album.name}"` || 'Spotify Spy';
-
   const spotifyCard = document.createElement('div');
   spotifyCard.classList.add('spotify-card');
+
+  if (!album || !tracks || tracks.length === 0) {
+    console.warn('Missing arguments in createAlbum:', { album, tracks });
+
+    const emptyMessage = document.createElement('p');
+    emptyMessage.classList.add('empty-message');
+    emptyMessage.textContent = 'No album found';
+
+    spotifyCard.appendChild(emptyMessage);
+    return spotifyCard;
+  }
+
+  document.title = album.name || 'Spotify Spy';
 
   const albumHero = document.createElement('div');
   albumHero.classList.add('album-hero');
@@ -587,14 +665,14 @@ const createAlbum = (album, tracks) => {
   const albumArtistsContainer = document.createElement('div');
   albumArtistsContainer.id = 'album-artists-container';
 
-  album.artists.forEach((artist, index) => {
+  album.artists?.forEach((artist, index) => {
     const artistText = document.createElement('a');
     artistText.textContent = artist.name || 'artist';
-    artistText.href = `/artist.html?id=${artist.id}`;
+    artistText.href = artist.id ? `/artist.html?id=${artist.id}` : '#';
     artistText.classList.add('album-artist');
     albumArtistsContainer.appendChild(artistText);
 
-    if (index < album.artists.length - 1) {
+    if (index < album.artists?.length - 1) {
       const comma = document.createElement('span');
       comma.classList.add('comma');
       comma.textContent = ',';
@@ -640,7 +718,7 @@ const createAlbum = (album, tracks) => {
   playBtn.href = tracks[0].external_urls.spotify;
   playBtn.target = '_blank';
 
-  const isFavorite = getFavoriteAlbums().some((a) => a.id === album.id);
+  const isFavorite = getFavoriteAlbums().some((a) => a?.id === album.id);
   const saveIcon = document.createElement('i');
   saveIcon.classList.add('fa-solid', isFavorite ? 'fa-check' : 'fa-plus');
 
@@ -716,16 +794,11 @@ const createAlbum = (album, tracks) => {
     play.style.top = '45%';
     play.style.left = '40%';
     play.style.transform = 'translate(-50%, -50%)';
-    play.href = track.external_urls.spotify;
+    play.href = track.external_urls?.spotify || '#';
     play.target = '_blank';
 
     const playIcon = document.createElement('i');
     playIcon.classList.add('fa-solid', 'fa-play', 'play-icon');
-
-    play.appendChild(playIcon);
-    numberContainer.appendChild(play);
-    numberContainer.appendChild(number);
-    albumTrackRow.appendChild(numberContainer);
 
     const infoDiv = document.createElement('div');
     infoDiv.classList.add('track-info');
@@ -734,10 +807,10 @@ const createAlbum = (album, tracks) => {
 
     const artistsContainer = document.createElement('div');
 
-    track.artists.forEach((artist, index) => {
+    track.artists?.forEach((artist, index) => {
       const artistText = document.createElement('a');
       artistText.textContent = artist.name || 'artist';
-      artistText.href = `/artist.html?id=${artist.id}`;
+      artistText.href = artist.id ? `/artist.html?id=${artist.id}` : '#';
       artistText.classList.add('album-artist');
       artistsContainer.appendChild(artistText);
 
@@ -758,7 +831,7 @@ const createAlbum = (album, tracks) => {
     ).toLocaleString();
 
     const saveIcon = document.createElement('i');
-    const isFavorite = getFavoriteTracks().some((t) => t.id === track.id);
+    const isFavorite = getFavoriteTracks().some((t) => t?.id === track.id);
     saveIcon.classList.add('fa-solid', isFavorite ? 'fa-check' : 'fa-plus');
 
     const saveBtn = document.createElement('button');
@@ -782,6 +855,8 @@ const createAlbum = (album, tracks) => {
     const elipsisIcon = document.createElement('i');
     elipsisIcon.classList.add('fa-solid', 'fa-ellipsis', 'scalable');
 
+    play.appendChild(playIcon);
+    numberContainer.appendChild(play);
     numberContainer.appendChild(number);
     infoDiv.appendChild(trackName);
     infoDiv.appendChild(artistsContainer);
@@ -809,6 +884,17 @@ const createFavorites = (tracks) => {
   const spotifyCard = document.createElement('div');
   spotifyCard.classList.add('spotify-card');
 
+  if (!tracks || tracks.length === 0) {
+    console.warn(`Missing tracks in createFavorites: ${tracks}`);
+
+    const emptyMessage = document.createElement('p');
+    emptyMessage.classList.add('empty-message');
+    emptyMessage.textContent = 'No favorite tracks';
+
+    spotifyCard.appendChild(emptyMessage);
+    return spotifyCard;
+  }
+
   const albumHero = document.createElement('div');
   albumHero.classList.add('album-hero');
 
@@ -827,10 +913,6 @@ const createFavorites = (tracks) => {
   `;
   };
 
-  if (!albumImgUrl) {
-    albumHero.style.background = 'linear-gradient(135deg, #1c1c1c, #121212)';
-  }
-
   const albumImg = document.createElement('img');
   albumImg.classList.add('album-hero-img');
   albumImg.src = 'media/liked-songs.jpg';
@@ -845,7 +927,7 @@ const createFavorites = (tracks) => {
 
   const albumTitle = document.createElement('h1');
   albumTitle.classList.add('album-title');
-  albumTitle.textContent = 'Liked songs';
+  albumTitle.textContent = 'Liked Songs';
 
   const albumMeta = document.createElement('div');
   albumMeta.classList.add('album-meta');
@@ -878,9 +960,7 @@ const createFavorites = (tracks) => {
   playBtn.classList.add('album-btn', 'album-play-btn');
   const playIcon = document.createElement('i');
   playIcon.classList.add('fa-solid', 'fa-play');
-  if (tracks.length > 0) {
-    playBtn.href = tracks[0].external_urls.spotify;
-  }
+  playBtn.href = tracks[0].external_urls?.spotify || '#';
   playBtn.target = '_blank';
 
   const moreBtn = document.createElement('button');
@@ -945,15 +1025,13 @@ const createFavorites = (tracks) => {
     play.style.top = '45%';
     play.style.left = '40%';
     play.style.transform = 'translate(-50%, -50%)';
-    play.href = track.external_urls.spotify;
+    play.href = track.external_urls?.spotify || '#';
     play.target = '_blank';
 
     const playIcon = document.createElement('i');
     playIcon.classList.add('fa-solid', 'fa-play', 'play-icon');
 
     play.appendChild(playIcon);
-    numberContainer.appendChild(play);
-    numberContainer.appendChild(number);
     albumTrackRow.appendChild(numberContainer);
 
     const infoDiv = document.createElement('div');
@@ -963,10 +1041,10 @@ const createFavorites = (tracks) => {
 
     const artistsContainer = document.createElement('div');
 
-    track.artists.forEach((artist, index) => {
+    track.artists?.forEach((artist, index) => {
       const artistText = document.createElement('a');
       artistText.textContent = artist.name || 'artist';
-      artistText.href = `/artist.html?id=${artist.id}`;
+      artistText.href = artist.id ? `/artist.html?id=${artist.id}` : '#';
       artistText.classList.add('album-artist');
       artistsContainer.appendChild(artistText);
 
@@ -981,10 +1059,10 @@ const createFavorites = (tracks) => {
 
     const albumInfo = document.createElement('a');
     albumInfo.classList.add('album-name', 'play-info');
-    albumInfo.href = `/album.html?id=${track.album.id}`;
-    albumInfo.textContent = track.album.name;
+    albumInfo.textContent = track.album?.name || 'Unknown album';
+    albumInfo.href = track.album?.id ? `/album.html?id=${track.album.id}` : '#';
 
-    const isFavorite = getFavoriteTracks().some((t) => t.id === track.id);
+    const isFavorite = getFavoriteTracks().some((t) => t?.id === track.id);
     const saveIcon = document.createElement('i');
     saveIcon.classList.add(
       'fa-solid',
@@ -1011,25 +1089,13 @@ const createFavorites = (tracks) => {
     numberContainer.appendChild(number);
     infoDiv.appendChild(trackName);
     infoDiv.appendChild(artistsContainer);
-    saveBtn.addEventListener('click', () => {
-      const isFavorite = getFavoriteTracks().some((t) => t.id === track.id);
-      if (!isFavorite) {
-        saveFavoriteTrack(track);
-        saveIcon.classList.replace('fa-circle-plus', 'fa-check');
-        saveBtn.classList.add('saved');
-      } else {
-        removeFavoriteTrack(track);
-        saveIcon.classList.replace('fa-check', 'fa-circle-plus');
-        saveBtn.classList.remove('saved');
-      }
-      loadSidebar();
-    });
     saveBtn.appendChild(saveIcon);
     elipsisBtn.appendChild(elipsisIcon);
     albumTrackRow.appendChild(numberContainer);
     albumTrackRow.appendChild(infoDiv);
     albumTrackRow.appendChild(albumInfo);
     albumTrackRow.appendChild(saveBtn);
+    onTrackSaveClick(saveBtn, saveIcon, track);
     albumTrackRow.appendChild(trackDuration);
     albumTrackRow.appendChild(elipsisBtn);
     albumTracklist.appendChild(albumTrackRow);
@@ -1048,94 +1114,130 @@ const displaySearch = async (e) => {
 
   const main = document.querySelector('main');
   const searchField = document.getElementById('search');
-  const query = searchField.value;
-  const token = await getToken();
+  const query = searchField.value.trim();
 
-  const res = await fetch(
-    `https://api.spotify.com/v1/search?q=${encodeURIComponent(
-      query
-    )}&type=track`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  if (!query) {
+    console.warn('Search query is empty');
+    return;
+  }
+
+  try {
+    const token = await getToken();
+
+    const res = await fetch(
+      `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+        query
+      )}&type=track`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`Error: ${res.status}: ${res.statusText}`);
     }
-  );
 
-  const data = await res.json();
-  const tracks = data.tracks.items;
+    const data = await res.json();
+    const tracks = data.tracks?.items ?? [];
 
-  const content = createSearch(tracks);
-  const sidebar = createSidebar();
+    const content = createSearch(tracks);
+    const sidebar = createSidebar();
 
-  main.innerHTML = '';
-  main.appendChild(sidebar);
-  main.appendChild(content);
-  loadSidebar();
+    main.innerHTML = '';
+    main.appendChild(sidebar);
+    main.appendChild(content);
+    loadSidebar();
 
-  showResultsView();
+    showResultsView();
+  } catch (err) {
+    console.error('Search failed:', err);
+  }
 };
 
 const displayMain = async () => {
   const main = document.querySelector('main');
 
-  const token = await getToken();
+  try {
+    const token = await getToken();
 
-  const newReleasesRes = await fetch(
-    `${BASE_URL}browse/new-releases?limit=50`,
-    {
-      headers: {Authorization: `Bearer ${token}`},
+    const newReleasesRes = await fetch(
+      `${BASE_URL}browse/new-releases?limit=50`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    if (!newReleasesRes.ok) {
+      throw new Error(
+        `Error: ${newReleasesRes.status}: ${newReleasesRes.statusText}`
+      );
     }
-  );
 
-  const newReleasesData = await newReleasesRes.json();
+    const newReleasesData = await newReleasesRes.json();
 
-  const newReleases = newReleasesData.albums.items;
+    const newReleases = newReleasesData.albums?.items;
 
-  const content = createMain(newReleases);
-  const sidebar = createSidebar();
+    const content = createMain(newReleases);
+    const sidebar = createSidebar();
 
-  main.innerHTML = '';
-  sidebar.innerHTML = '';
-  main.appendChild(sidebar);
-  main.appendChild(content);
-  loadSidebar();
+    main.innerHTML = '';
+    main.appendChild(sidebar);
+    main.appendChild(content);
+    loadSidebar();
+  } catch (err) {
+    console.error('Displaying main failed:', err);
+  }
 };
 
 const displayArtist = async () => {
   const params = new URLSearchParams(window.location.search);
   const artistId = params.get('id');
   const main = document.querySelector('main');
-  const token = await getToken();
 
-  const [artistRes, topTracksRes, topAlbumsRes] = await Promise.all([
-    fetch(`${BASE_URL}artists/${encodeURIComponent(artistId)}`, {
-      headers: {Authorization: `Bearer ${token}`},
-    }),
-    fetch(`${BASE_URL}artists/${encodeURIComponent(artistId)}/top-tracks`, {
-      headers: {Authorization: `Bearer ${token}`},
-    }),
-    fetch(`${BASE_URL}artists/${encodeURIComponent(artistId)}/albums?limit=8`, {
-      headers: {Authorization: `Bearer ${token}`},
-    }),
-  ]);
+  try {
+    const token = await getToken();
 
-  const artistData = await artistRes.json();
-  const topTracksData = await topTracksRes.json();
-  const topAlbumsData = await topAlbumsRes.json();
+    const [artistRes, topTracksRes, topAlbumsRes] = await Promise.all([
+      fetch(`${BASE_URL}artists/${encodeURIComponent(artistId)}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      }),
+      fetch(`${BASE_URL}artists/${encodeURIComponent(artistId)}/top-tracks`, {
+        headers: { Authorization: `Bearer ${token}` },
+      }),
+      fetch(
+        `${BASE_URL}artists/${encodeURIComponent(artistId)}/albums?limit=8`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      ),
+    ]);
 
-  const content = createArtist(
-    artistData,
-    topTracksData.tracks,
-    topAlbumsData.items
-  );
-  const sidebar = createSidebar();
+    if (!artistRes.ok || !topTracksRes.ok || !topAlbumsRes.ok) {
+      throw new Error(
+        `Displaying artist failed: ${artistRes.status}, tracks: ${topTracksRes.status}, albums: ${topAlbumsRes.status}`
+      );
+    }
 
-  main.innerHTML = '';
-  sidebar.innerHTML = '';
-  main.appendChild(sidebar);
-  main.appendChild(content);
-  loadSidebar();
+    const artistData = await artistRes.json();
+    const topTracksData = await topTracksRes.json();
+    const topAlbumsData = await topAlbumsRes.json();
+
+    const content = createArtist(
+      artistData,
+      topTracksData.tracks,
+      topAlbumsData.items
+    );
+    const sidebar = createSidebar();
+
+    main.innerHTML = '';
+    main.appendChild(sidebar);
+    main.appendChild(content);
+    loadSidebar();
+  } catch (err) {
+    console.error('Displaying artist failed:', err);
+  }
 };
 
 const displayAlbum = async () => {
@@ -1144,50 +1246,59 @@ const displayAlbum = async () => {
 
   const main = document.querySelector('main');
 
-  const token = await getToken();
+  try {
+    const token = await getToken();
 
-  const albumRes = await fetch(
-    `https://api.spotify.com/v1/albums/${encodeURIComponent(albumId)}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const albumRes = await fetch(
+      `https://api.spotify.com/v1/albums/${encodeURIComponent(albumId)}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const albumTracksRes = await fetch(
+      `https://api.spotify.com/v1/albums/${encodeURIComponent(albumId)}/tracks`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!albumRes.ok || !albumTracksRes.ok) {
+      throw new Error(
+        `Displaying album failed: ${albumRes.status}, tracks: ${albumTracksRes.status}`
+      );
     }
-  );
-  const albumTracksRes = await fetch(
-    `https://api.spotify.com/v1/albums/${encodeURIComponent(albumId)}/tracks`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
 
-  const albumData = await albumRes.json();
-  const albumTracksData = await albumTracksRes.json();
+    const albumData = await albumRes.json();
+    const albumTracksData = await albumTracksRes.json();
 
-  const tracks = albumTracksData.items;
+    const tracks = albumTracksData.items;
 
-  const content = createAlbum(albumData, tracks);
-  const sidebar = createSidebar();
+    const content = createAlbum(albumData, tracks);
+    const sidebar = createSidebar();
 
-  main.innerHTML = '';
-  sidebar.innerHTML = '';
-  main.appendChild(sidebar);
-  main.appendChild(content);
-  loadSidebar();
+    main.innerHTML = '';
+    main.appendChild(sidebar);
+    main.appendChild(content);
+    loadSidebar();
+  } catch (err) {
+    console.error('Displaying album failed:', err);
+  }
 };
 
 const displayFavorites = () => {
   const main = document.querySelector('main');
 
+  // Not adding any error handling since this line will return [] if empty and createFavorites will handle empty tracks
   const tracks = getFavoriteTracks();
 
   const content = createFavorites(tracks);
   const sidebar = createSidebar();
 
   main.innerHTML = '';
-  sidebar.innerHTML = '';
   main.appendChild(sidebar);
   main.appendChild(content);
   loadSidebar();
@@ -1206,14 +1317,11 @@ const init = () => {
     state.currentPage.endsWith('/index.html')
   ) {
     displayMain();
-  }
-  if (state.currentPage.endsWith('/artist.html')) {
+  } else if (state.currentPage.endsWith('/artist.html')) {
     displayArtist();
-  }
-  if (state.currentPage.endsWith('/album.html')) {
+  } else if (state.currentPage.endsWith('/album.html')) {
     displayAlbum();
-  }
-  if (state.currentPage.endsWith('/favorites.html')) {
+  } else if (state.currentPage.endsWith('/favorites.html')) {
     displayFavorites();
   } else {
     console.warn('Page not recognized:', state.currentPage);
