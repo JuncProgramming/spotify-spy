@@ -76,4 +76,3 @@ export const loadSidebar = () => {
     sidebar.appendChild(favoriteLink);
   }
 };
-

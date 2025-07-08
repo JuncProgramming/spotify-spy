@@ -43,6 +43,26 @@ const convertDuration = (ms, isTrackFormat = true) => {
   }
 };
 
+const logError = (message, error) => {
+  console.error(message, error);
+};
+
+const displayUIErrorMessage = (container, message) => {
+  if (!container) {
+    console.warn('Missing container in displayMessage');
+    return null;
+  }
+
+  const emptyMessage = document.createElement('p');
+  emptyMessage.classList.add('empty-message');
+  emptyMessage.textContent = message;
+
+  container.innerHTML = '';
+  container.appendChild(emptyMessage);
+
+  return container;
+};
+
 const showResultsView = () => {
   const results = document.querySelector('.search-results');
   const details = document.getElementById('popular-tracks-container');
@@ -94,15 +114,37 @@ const onAlbumSaveClick = (saveButton, saveIcon, album) => {
     const isFavorite = getFavoriteAlbums().some((a) => a?.id === album.id);
     if (!isFavorite) {
       saveFavoriteAlbum(album);
-      saveIcon.classList.replace('fa-circle-plus', 'fa-circle-check');
+      saveIcon.className = 'fa-solid scalable';
+      saveIcon.classList.add(isFavorite ? 'fa-plus' : 'fa-check');
       saveButton.classList.add('saved');
     } else {
       removeFavoriteAlbum(album);
-      saveIcon.classList.replace('fa-circle-check', 'fa-circle-plus');
+      saveIcon.className = 'fa-solid scalable';
+      saveIcon.classList.add('fa-plus');
       saveButton.classList.remove('saved');
     }
     loadSidebar();
   });
+};
+
+const createCommaSeparatedArtists = (artists, className = 'artist') => {
+  const container = document.createElement('div');
+  artists?.forEach((artist, index) => {
+    const artistText = document.createElement('a');
+    artistText.textContent = artist.name || 'artist';
+    artistText.href = artist.id ? `/artist.html?id=${artist.id}` : '#';
+    artistText.classList.add(className);
+    container.appendChild(artistText);
+
+    if (index < artists.length - 1) {
+      const comma = document.createElement('span');
+      comma.classList.add('comma');
+      comma.textContent = ',';
+      comma.style.color = '#bbbbbb';
+      container.appendChild(comma);
+    }
+  });
+  return container;
 };
 
 const createDotSpacer = () => {
@@ -150,7 +192,7 @@ const createBestResultCard = (track) => {
   play.addEventListener('click', (e) => {
     e.preventDefault();
     window.open(track.album?.external_urls?.spotify, '_blank');
-    window.location.href = `/album.html?id=${track.album?.id}`;
+    window.location.href = album.id ? `/album.html?id=${track.album?.id}` : '#';
   });
 
   const playIcon = document.createElement('i');
@@ -161,24 +203,6 @@ const createBestResultCard = (track) => {
 
   const title = document.createElement('h3');
   title.textContent = track.name || 'track name';
-
-  const artistsContainer = document.createElement('div');
-
-  track.artists?.forEach((artist, index) => {
-    const artistText = document.createElement('a');
-    artistText.textContent = artist.name || 'artist';
-    artistText.href = artist.id ? `/artist.html?id=${artist.id}` : '#';
-    artistText.classList.add('artist');
-    artistsContainer.appendChild(artistText);
-
-    if (index < track.artists.length - 1) {
-      const comma = document.createElement('span');
-      comma.classList.add('comma');
-      comma.textContent = ',';
-      comma.style.color = '#bbbbbb';
-      artistsContainer.appendChild(comma);
-    }
-  });
 
   bestTrackRow.addEventListener('mouseenter', () => {
     play.classList.remove('animated-out');
@@ -192,7 +216,7 @@ const createBestResultCard = (track) => {
 
   play.appendChild(playIcon);
   info.appendChild(title);
-  info.appendChild(artistsContainer);
+  info.appendChild(createCommaSeparatedArtists(track.artists));
   mainContent.appendChild(img);
   mainContent.appendChild(info);
   bestTrackRow.appendChild(mainContent);
@@ -272,24 +296,6 @@ const createTrackCard = (track, number = null) => {
   const title = document.createElement('h3');
   title.textContent = track.name || 'track name';
 
-  const artistsContainer = document.createElement('div');
-
-  track.artists?.forEach((artist, index) => {
-    const artistText = document.createElement('a');
-    artistText.textContent = artist.name || 'artist';
-    artistText.href = artist.id ? `/artist.html?id=${artist.id}` : '#';
-    artistText.classList.add('artist');
-    artistsContainer.appendChild(artistText);
-
-    if (index < track.artists.length - 1) {
-      const comma = document.createElement('span');
-      comma.classList.add('comma');
-      comma.textContent = ',';
-      comma.style.color = '#bbbbbb';
-      artistsContainer.appendChild(comma);
-    }
-  });
-
   const isFavorite = getFavoriteTracks().some((t) => t?.id === track.id);
 
   const saveBtn = document.createElement('button');
@@ -314,7 +320,7 @@ const createTrackCard = (track, number = null) => {
   elipsisIcon.classList.add('fa-solid', 'fa-ellipsis', 'scalable');
 
   info.appendChild(title);
-  info.appendChild(artistsContainer);
+  info.appendChild(createCommaSeparatedArtists(track.artists));
   saveBtn.appendChild(saveIcon);
   elipsis.appendChild(elipsisIcon);
   imgContainer.appendChild(img);
@@ -400,14 +406,7 @@ const createSearch = (tracks) => {
 
   if (!tracks || tracks.length === 0) {
     console.warn(`Missing tracks in createSearch: ${tracks}`);
-
-    const emptyMessage = document.createElement('p');
-    emptyMessage.classList.add('empty-message');
-    emptyMessage.textContent = 'No results found';
-
-    searchResults.appendChild(emptyMessage);
-    spotifyCard.appendChild(searchResults);
-    return spotifyCard;
+    return displayUIErrorMessage(spotifyCard, 'No results found');
   }
 
   const bestTrackContainer = document.createElement('div');
@@ -444,13 +443,7 @@ const createMain = (newReleases) => {
 
   if (!newReleases || newReleases.length === 0) {
     console.warn(`Missing new releases in createMain: ${newReleases}`);
-
-    const emptyMessage = document.createElement('p');
-    emptyMessage.classList.add('empty-message');
-    emptyMessage.textContent = 'No new releases found';
-
-    spotifyCard.appendChild(emptyMessage);
-    return spotifyCard;
+    return displayUIErrorMessage(spotifyCard, 'No new releases found');
   }
 
   const newReleasesContainer = document.createElement('div');
@@ -484,13 +477,7 @@ const createArtist = (artist, tracks = [], albums = []) => {
 
   if (!artist) {
     console.warn(`Missing artist in createArtist: ${artist}`);
-
-    const emptyMessage = document.createElement('p');
-    emptyMessage.classList.add('empty-message');
-    emptyMessage.textContent = 'No artist found';
-
-    spotifyCard.appendChild(emptyMessage);
-    return spotifyCard;
+    return displayUIErrorMessage(spotifyCard, 'No artist found');
   }
 
   document.title = artist.name || 'Spotify Spy';
@@ -608,13 +595,7 @@ const createAlbum = (album, tracks) => {
 
   if (!album || !tracks || tracks.length === 0) {
     console.warn('Missing arguments in createAlbum:', { album, tracks });
-
-    const emptyMessage = document.createElement('p');
-    emptyMessage.classList.add('empty-message');
-    emptyMessage.textContent = 'No album found';
-
-    spotifyCard.appendChild(emptyMessage);
-    return spotifyCard;
+    return displayUIErrorMessage(spotifyCard, 'No album found');
   }
 
   document.title = album.name || 'Spotify Spy';
@@ -662,24 +643,11 @@ const createAlbum = (album, tracks) => {
   const albumMeta = document.createElement('div');
   albumMeta.classList.add('album-meta');
 
-  const albumArtistsContainer = document.createElement('div');
+  const albumArtistsContainer = createCommaSeparatedArtists(
+    album.artists,
+    'album-artist'
+  );
   albumArtistsContainer.id = 'album-artists-container';
-
-  album.artists?.forEach((artist, index) => {
-    const artistText = document.createElement('a');
-    artistText.textContent = artist.name || 'artist';
-    artistText.href = artist.id ? `/artist.html?id=${artist.id}` : '#';
-    artistText.classList.add('album-artist');
-    albumArtistsContainer.appendChild(artistText);
-
-    if (index < album.artists?.length - 1) {
-      const comma = document.createElement('span');
-      comma.classList.add('comma');
-      comma.textContent = ',';
-      comma.style.color = '#ffffff';
-      albumArtistsContainer.appendChild(comma);
-    }
-  });
 
   const albumYear = document.createElement('span');
   albumYear.classList.add('album-year');
@@ -720,6 +688,7 @@ const createAlbum = (album, tracks) => {
 
   const isFavorite = getFavoriteAlbums().some((a) => a?.id === album.id);
   const saveIcon = document.createElement('i');
+  saveIcon.className = 'fa-solid scalable';
   saveIcon.classList.add('fa-solid', isFavorite ? 'fa-check' : 'fa-plus');
 
   const saveBtn = document.createElement('button');
@@ -805,24 +774,6 @@ const createAlbum = (album, tracks) => {
     const trackName = document.createElement('h3');
     trackName.textContent = track.name;
 
-    const artistsContainer = document.createElement('div');
-
-    track.artists?.forEach((artist, index) => {
-      const artistText = document.createElement('a');
-      artistText.textContent = artist.name || 'artist';
-      artistText.href = artist.id ? `/artist.html?id=${artist.id}` : '#';
-      artistText.classList.add('album-artist');
-      artistsContainer.appendChild(artistText);
-
-      if (index < track.artists.length - 1) {
-        const comma = document.createElement('span');
-        comma.classList.add('comma');
-        comma.textContent = ',';
-        comma.style.color = '#bbbbbb';
-        artistsContainer.appendChild(comma);
-      }
-    });
-
     const playInfo = document.createElement('div');
     playInfo.classList.add('play-info');
     // Random ass number, because the API doesn't return it :(
@@ -859,7 +810,7 @@ const createAlbum = (album, tracks) => {
     numberContainer.appendChild(play);
     numberContainer.appendChild(number);
     infoDiv.appendChild(trackName);
-    infoDiv.appendChild(artistsContainer);
+    infoDiv.appendChild(createCommaSeparatedArtists(track.artists));
     saveBtn.appendChild(saveIcon);
     elipsisBtn.appendChild(elipsisIcon);
     albumTrackRow.appendChild(numberContainer);
@@ -886,13 +837,7 @@ const createFavorites = (tracks) => {
 
   if (!tracks || tracks.length === 0) {
     console.warn(`Missing tracks in createFavorites: ${tracks}`);
-
-    const emptyMessage = document.createElement('p');
-    emptyMessage.classList.add('empty-message');
-    emptyMessage.textContent = 'No favorite tracks';
-
-    spotifyCard.appendChild(emptyMessage);
-    return spotifyCard;
+    return displayUIErrorMessage(spotifyCard, 'No favorite tracks');
   }
 
   const albumHero = document.createElement('div');
@@ -1039,24 +984,6 @@ const createFavorites = (tracks) => {
     const trackName = document.createElement('h3');
     trackName.textContent = track.name;
 
-    const artistsContainer = document.createElement('div');
-
-    track.artists?.forEach((artist, index) => {
-      const artistText = document.createElement('a');
-      artistText.textContent = artist.name || 'artist';
-      artistText.href = artist.id ? `/artist.html?id=${artist.id}` : '#';
-      artistText.classList.add('album-artist');
-      artistsContainer.appendChild(artistText);
-
-      if (index < track.artists.length - 1) {
-        const comma = document.createElement('span');
-        comma.classList.add('comma');
-        comma.textContent = ',';
-        comma.style.color = '#bbbbbb';
-        artistsContainer.appendChild(comma);
-      }
-    });
-
     const albumInfo = document.createElement('a');
     albumInfo.classList.add('album-name', 'play-info');
     albumInfo.textContent = track.album?.name || 'Unknown album';
@@ -1088,7 +1015,7 @@ const createFavorites = (tracks) => {
 
     numberContainer.appendChild(number);
     infoDiv.appendChild(trackName);
-    infoDiv.appendChild(artistsContainer);
+    infoDiv.appendChild(createCommaSeparatedArtists(track.artists));
     saveBtn.appendChild(saveIcon);
     elipsisBtn.appendChild(elipsisIcon);
     albumTrackRow.appendChild(numberContainer);
@@ -1152,7 +1079,9 @@ const displaySearch = async (e) => {
 
     showResultsView();
   } catch (err) {
-    console.error('Search failed:', err);
+    logError('Fetching search results failed:', err);
+    main.innerHTML = '';
+    displayUIErrorMessage(main, 'Failed to load search results.');
   }
 };
 
@@ -1187,7 +1116,9 @@ const displayMain = async () => {
     main.appendChild(content);
     loadSidebar();
   } catch (err) {
-    console.error('Displaying main failed:', err);
+    logError('Fetching new releases failed:', err);
+    main.innerHTML = '';
+    displayUIErrorMessage(main, 'Failed to load new releases.');
   }
 };
 
@@ -1236,7 +1167,9 @@ const displayArtist = async () => {
     main.appendChild(content);
     loadSidebar();
   } catch (err) {
-    console.error('Displaying artist failed:', err);
+    logError('Fetching artist failed:', err);
+    main.innerHTML = '';
+    displayUIErrorMessage(main, 'Failed to load artist details.');
   }
 };
 
@@ -1285,7 +1218,9 @@ const displayAlbum = async () => {
     main.appendChild(content);
     loadSidebar();
   } catch (err) {
-    console.error('Displaying album failed:', err);
+    logError('Fetching album failed:', err);
+    main.innerHTML = '';
+    displayUIErrorMessage(main, 'Failed to load album.');
   }
 };
 
@@ -1305,6 +1240,7 @@ const displayFavorites = () => {
 };
 
 const init = () => {
+  state.currentPage = window.location.pathname;
   const form = document.getElementById('form');
   if (form) {
     form.addEventListener('submit', displaySearch);
@@ -1329,3 +1265,18 @@ const init = () => {
 };
 
 init();
+
+window.addEventListener('pageshow', () => {
+  init();
+});
+
+window.addEventListener('popstate', () => {
+  init(); // or whatever function loads the current view
+});
+
+// Reloads the sidebar based on visibility
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    loadSidebar();
+  }
+});
