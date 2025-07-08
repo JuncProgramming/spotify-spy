@@ -18,9 +18,11 @@
   left: 0;
   right: 0;
   height: 40rem;
-  background: linear-gradient(to bottom,
-      var(--album-accent, #1c1c1c),
-      transparent 90%);
+  background: linear-gradient(
+    to bottom,
+    var(--album-accent, #1c1c1c),
+    transparent 90%
+  );
   z-index: -1;
   pointer-events: none;
 }
@@ -94,7 +96,7 @@ main {
 
 .nav-btn:hover {
   background-color: transparent;
-  color: var(--light-text)
+  color: var(--light-text);
 }
 
 #form {
@@ -458,9 +460,11 @@ h2 {
   border-top-left-radius: 0.75rem;
   border-top-right-radius: 0.75rem;
   width: 100%;
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+      135deg,
       rgba(28, 28, 28, 0.8),
-      rgba(18, 18, 18, 0.8)),
+      rgba(18, 18, 18, 0.8)
+    ),
     url('./media/default-cover.png');
   background-size: cover;
   background-position: center;
@@ -658,7 +662,7 @@ i {
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  margin: 1.5rem 0 1rem 1.5rem;
+  margin: 1.5rem 0 1rem 2.5rem;
 }
 
 .album-btn {
@@ -854,8 +858,7 @@ a.album-name.play-info {
 .album-tracklist-header,
 .album-track-row {
   display: grid;
-  grid-template-columns:
-    3rem 1fr 50rem 3rem 2rem 1rem;
+  grid-template-columns: 3rem 1fr 50rem 3rem 2rem 1rem;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
@@ -918,7 +921,7 @@ span.album-track-duration {
   margin: 0;
 }
 
-.spotify-card>h2 {
+.spotify-card > h2 {
   margin: 2.5rem 2rem 1rem 2rem;
   text-align: left;
 }
@@ -1046,4 +1049,11 @@ a.search-title-link {
 
 a.search-title-link:hover {
   color: var(--hover-green);
+}
+
+.empty-message {
+  color: var(--muted-text);
+  font-size: 1.2rem;
+  text-align: center;
+  margin: 2rem auto;
 }
