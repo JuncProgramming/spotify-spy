@@ -81,14 +81,14 @@ main {
 .navigation-btns {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .nav-btn {
   background-color: transparent;
   border: none;
   cursor: pointer;
-  padding: 0.25rem;
+  padding: 0;
   font-size: 1.5rem;
   color: var(--muted-text);
   transition: color 0.2s ease;
@@ -567,7 +567,6 @@ i {
 }
 
 .scalable:hover {
-  scale: 1.05;
   color: var(--light-text);
 }
 
@@ -685,7 +684,7 @@ i {
 }
 
 .album-btn:hover {
-  scale: 1.03;
+  scale: 1.05;
 }
 
 .album-btn:active {
@@ -742,10 +741,12 @@ a.album-play-btn:hover {
   border: 0.125rem solid var(--album-button);
   background: transparent;
   font-size: 1.3rem;
+  line-height: 1;
 }
 
 .album-save-btn:hover,
 .album-more-btn:hover {
+  scale: 1.05;
   border-color: var(--light-text);
   color: var(--light-text);
   background-color: transparent;
@@ -809,7 +810,6 @@ i.fa-clock {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  font-size: 0.9rem;
 }
 
 .save-btn.saved i {
@@ -820,12 +820,6 @@ i.fa-clock {
 .save-btn i.fa-check {
   background-color: var(--album-btn-green);
   color: var(--very-dark-bg);
-  border-radius: 50%;
-  width: 1rem;
-  height: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: 0.6rem;
   line-height: 1.5rem;
 }
