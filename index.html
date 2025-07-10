@@ -1,32 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Spotify Spy</title>
+    <link rel="icon" type="image/x-icon" href="/media/default-cover.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://kit.fontawesome.com/adc98de5e5.js"
+      crossorigin="anonymous"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <title>Spotify Spy</title>
-  <link rel="icon" type="image/x-icon" href="/media/default-cover.png" />
-  <link rel="stylesheet" href="styles.css" />
-  <script src="https://kit.fontawesome.com/adc98de5e5.js" crossorigin="anonymous"></script>
-</head>
-
-<body>
-  <div class="title-container">
-    <div class="navigation-btns">
-      <button class="nav-btn back-btn" aria-label="Go back">
-        <i class="fa-solid fa-angle-left"></i>
-      </button>
-      <button class="nav-btn forward-btn" aria-label="Go forward">
-        <i class="fa-solid fa-angle-right"></i>
-      </button>
+  <body>
+    <div class="title-container">
+      <div class="navigation-btns">
+        <button class="nav-btn back-btn" aria-label="Go back">
+          <i class="fa-solid fa-angle-left"></i>
+        </button>
+        <button class="nav-btn forward-btn" aria-label="Go forward">
+          <i class="fa-solid fa-angle-right"></i>
+        </button>
+      </div>
+      <form id="form">
+        <input id="search" placeholder="Search track..." />
+      </form>
+      <a id="search-title" class="search-title-link" href="/">Spotify Spy</a>
     </div>
-    <form id="form">
-      <input id="search" placeholder="Search track..." />
-    </form>
-    <a id="search-title" class="search-title-link" href="/">Spotify Spy</a>
-  </div>
-  <main></main>
-  <script type="module" src="./main.js"></script>
-  <script src="navigation/navigation.js" defer></script>
-</body>
-
+    <main></main>
+    <div id="loader" class="loader hidden">
+      <div class="spinner"></div>
+    </div>
+    <script type="module" src="./main.js"></script>
+    <script src="navigation/navigation.js" defer></script>
+  </body>
 </html>
