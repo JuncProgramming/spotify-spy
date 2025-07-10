@@ -565,11 +565,46 @@ const createArtist = (artist, tracks = [], albums = []) => {
     popularTracksContainer.id = 'popular-tracks-container';
     popularTracksContainer.appendChild(popularHeader);
 
+    const MAXIMUM_TRACK_COUNT = 5;
+
     tracks?.forEach((track, index) => {
       const row = createTrackCard(track, index + 1);
       row.classList.add('artist-track-row');
+      if (index + 1 > MAXIMUM_TRACK_COUNT) {
+        row.classList.add('hidden');
+      }
       popularTracksContainer.appendChild(row);
     });
+
+    const showLessMoreBtn = document.createElement('button');
+    showLessMoreBtn.textContent = 'Show more';
+    showLessMoreBtn.classList.add('show-less-more-btn');
+
+    let isExpanded = false;
+
+    showLessMoreBtn.addEventListener('click', () => {
+      const allRows =
+        popularTracksContainer.querySelectorAll('.artist-track-row');
+      // If the list is not expanded, show the last 5 tracks and change the button text
+      if (isExpanded === false) {
+        allRows.forEach((row) => row.classList.remove('hidden'));
+        showLessMoreBtn.textContent = 'Show less';
+      }
+      // If the list is expanded, hide the last 5 tracks and change the button text
+      else {
+        allRows.forEach((row, index) => {
+          if (index + 1 > MAXIMUM_TRACK_COUNT) {
+            row.classList.add('hidden');
+          }
+        });
+        showLessMoreBtn.textContent = 'Show more';
+      }
+      // Switch the isExpanded
+      isExpanded = !isExpanded;
+    });
+
+    popularTracksContainer.appendChild(showLessMoreBtn);
+
     spotifyCard.appendChild(popularTracksContainer);
   }
 
