@@ -258,7 +258,7 @@ const createTrackCard = (track, number = null) => {
     play.classList.add('play-btn');
     play.style.position = 'absolute';
     play.style.top = '45%';
-    play.style.left = '40%';
+    play.style.left = '50%';
     play.style.transform = 'translate(-50%, -50%)';
     play.href = track.external_urls?.spotify || '#';
     play.target = '_blank';
@@ -425,7 +425,9 @@ const createSearch = (tracks) => {
   tracksContainer.appendChild(tracksHeader);
 
   tracks.forEach((track) => {
-    tracksContainer.appendChild(createTrackCard(track));
+    const row = createTrackCard(track);
+    row.classList.add('track-row', 'search-track-row');
+    tracksContainer.appendChild(row);
   });
 
   bestTrackContainer.appendChild(bestTrackHeader);
@@ -556,7 +558,9 @@ const createArtist = (artist, tracks = [], albums = []) => {
     popularTracksContainer.appendChild(popularHeader);
 
     tracks?.forEach((track, index) => {
-      popularTracksContainer.appendChild(createTrackCard(track, index + 1));
+      const row = createTrackCard(track, index + 1);
+      row.classList.add('artist-track-row');
+      popularTracksContainer.appendChild(row);
     });
     spotifyCard.appendChild(popularTracksContainer);
   }
@@ -761,7 +765,7 @@ const createAlbum = (album, tracks) => {
     play.classList.add('play-btn');
     play.style.position = 'absolute';
     play.style.top = '45%';
-    play.style.left = '40%';
+    play.style.left = '50%';
     play.style.transform = 'translate(-50%, -50%)';
     play.href = track.external_urls?.spotify || '#';
     play.target = '_blank';
@@ -968,7 +972,7 @@ const createFavorites = (tracks) => {
     play.classList.add('play-btn');
     play.style.position = 'absolute';
     play.style.top = '45%';
-    play.style.left = '40%';
+    play.style.left = '50%';
     play.style.transform = 'translate(-50%, -50%)';
     play.href = track.external_urls?.spotify || '#';
     play.target = '_blank';
@@ -977,6 +981,7 @@ const createFavorites = (tracks) => {
     playIcon.classList.add('fa-solid', 'fa-play', 'play-icon');
 
     play.appendChild(playIcon);
+    numberContainer.appendChild(play);
     albumTrackRow.appendChild(numberContainer);
 
     const infoDiv = document.createElement('div');
@@ -1266,17 +1271,7 @@ const init = () => {
 
 init();
 
+// Reload the app after navigating back or forward
 window.addEventListener('pageshow', () => {
   init();
-});
-
-window.addEventListener('popstate', () => {
-  init(); // or whatever function loads the current view
-});
-
-// Reloads the sidebar based on visibility
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') {
-    loadSidebar();
-  }
 });
