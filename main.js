@@ -63,6 +63,14 @@ const displayUIErrorMessage = (container, message) => {
   return container;
 };
 
+const showSpinner = () => {
+  document.getElementById('loader')?.classList.remove('hidden');
+};
+
+const hideSpinner = () => {
+  document.getElementById('loader')?.classList.add('hidden');
+};
+
 const showResultsView = () => {
   const results = document.querySelector('.search-results');
   const details = document.getElementById('popular-tracks-container');
@@ -1054,6 +1062,8 @@ const displaySearch = async (e) => {
   }
 
   try {
+    showSpinner();
+
     const token = await getToken();
 
     const res = await fetch(
@@ -1087,6 +1097,8 @@ const displaySearch = async (e) => {
     logError('Fetching search results failed:', err);
     main.innerHTML = '';
     displayUIErrorMessage(main, 'Failed to load search results.');
+  } finally {
+    hideSpinner();
   }
 };
 
@@ -1094,6 +1106,8 @@ const displayMain = async () => {
   const main = document.querySelector('main');
 
   try {
+    showSpinner();
+
     const token = await getToken();
 
     const newReleasesRes = await fetch(
@@ -1124,6 +1138,8 @@ const displayMain = async () => {
     logError('Fetching new releases failed:', err);
     main.innerHTML = '';
     displayUIErrorMessage(main, 'Failed to load new releases.');
+  } finally {
+    hideSpinner();
   }
 };
 
@@ -1133,6 +1149,8 @@ const displayArtist = async () => {
   const main = document.querySelector('main');
 
   try {
+    showSpinner();
+
     const token = await getToken();
 
     const [artistRes, topTracksRes, topAlbumsRes] = await Promise.all([
@@ -1175,6 +1193,8 @@ const displayArtist = async () => {
     logError('Fetching artist failed:', err);
     main.innerHTML = '';
     displayUIErrorMessage(main, 'Failed to load artist details.');
+  } finally {
+    hideSpinner();
   }
 };
 
@@ -1185,6 +1205,8 @@ const displayAlbum = async () => {
   const main = document.querySelector('main');
 
   try {
+    showSpinner();
+
     const token = await getToken();
 
     const albumRes = await fetch(
@@ -1226,6 +1248,8 @@ const displayAlbum = async () => {
     logError('Fetching album failed:', err);
     main.innerHTML = '';
     displayUIErrorMessage(main, 'Failed to load album.');
+  } finally {
+    hideSpinner();
   }
 };
 
