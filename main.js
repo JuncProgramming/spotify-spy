@@ -319,6 +319,7 @@ const createTrackCard = (track, number = null) => {
   );
 
   const duration = document.createElement('span');
+  duration.id = 'track-duration';
   duration.textContent = convertDuration(track.duration_ms);
 
   const elipsis = document.createElement('button');
@@ -327,8 +328,11 @@ const createTrackCard = (track, number = null) => {
   const elipsisIcon = document.createElement('i');
   elipsisIcon.classList.add('fa-solid', 'fa-ellipsis', 'scalable');
 
+  const artistWrap = createCommaSeparatedArtists(track.artists);
+  artistWrap.classList.add('artist-wrap');
+
   info.appendChild(title);
-  info.appendChild(createCommaSeparatedArtists(track.artists));
+  info.appendChild(artistWrap);
   saveBtn.appendChild(saveIcon);
   elipsis.appendChild(elipsisIcon);
   imgContainer.appendChild(img);
@@ -421,6 +425,7 @@ const createSearch = (tracks) => {
   bestTrackContainer.id = 'best-track-container';
 
   const bestTrackHeader = document.createElement('h2');
+  bestTrackHeader.id = 'best-track-header';
   bestTrackHeader.textContent = 'Best result';
 
   const bestCard = createBestResultCard(tracks[0]);
@@ -429,6 +434,7 @@ const createSearch = (tracks) => {
   tracksContainer.id = 'tracks-container';
 
   const tracksHeader = document.createElement('h2');
+  tracksHeader.id = 'tracks-header';
   tracksHeader.textContent = 'Tracks';
   tracksContainer.appendChild(tracksHeader);
 
@@ -737,9 +743,13 @@ const createAlbum = (album, tracks) => {
   const saveIcon = document.createElement('i');
   saveIcon.className = 'fa-solid scalable';
   saveIcon.classList.add('fa-solid', isFavorite ? 'fa-check' : 'fa-plus');
+  saveIcon.style.position = 'absolute';
+  saveIcon.style.top = '52%';
+  saveIcon.style.left = '50%';
+  saveIcon.style.transform = 'translate(-50%, -50%)';
 
   const saveBtn = document.createElement('button');
-  saveBtn.type = 'button';
+  saveBtn.style.position = 'relative';
   saveBtn.classList.add('album-btn', 'album-save-btn');
   if (isFavorite) {
     saveBtn.classList.add('saved');

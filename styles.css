@@ -100,10 +100,9 @@ main {
 }
 
 #form {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  flex: 1;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 #search-title {
@@ -589,9 +588,9 @@ i {
   color: var(--hover-green);
 }
 
-.save-btn i,
-.elipsis-btn i,
-.play-btn {
+.track-row .save-btn i,
+.track-row .elipsis-btn i,
+.track-row .play-btn {
   opacity: 0;
 }
 
@@ -1139,4 +1138,199 @@ button.show-less-more-btn {
 
 button.show-less-more-btn:hover {
   color: var(--light-text);
+}
+
+@media (max-width: 480px) {
+  .title-container {
+    padding: 1rem;
+    margin: 0;
+    gap: 1rem;
+  }
+
+  #search {
+    margin: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .album-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3.5rem 1.5rem 0;
+  }
+
+  .album-hero-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .album-title {
+    margin: 0;
+  }
+
+  .album-controls {
+    margin: 1.5rem 0 1rem 1.5rem;
+  }
+
+  .album-tracklist-container {
+    width: 100%;
+    margin: 0 auto 1.5rem;
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    display: block;
+    padding: 0;
+  }
+
+  .artist-hero {
+    padding: 2rem 1rem;
+  }
+
+  .album-tracklist-col.number,
+  .album-tracklist-col.plays,
+  .album-tracklist-col.time,
+  .container-list-number,
+  .play-info,
+  .album-track-duration,
+  .album-tracklist-header,
+  .navigation-btns,
+  .sidebar,
+  #best-track-container,
+  #tracks-header,
+  #track-duration {
+    display: none;
+  }
+
+  .album-track-row {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) 2rem 2rem;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .track-row {
+    padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+  }
+
+  .album-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+    gap: 0.75rem;
+  }
+
+  a.album-card {
+    width: calc(100% - 1rem);
+  }
+
+  a.album-play-btn,
+  .green-play-btn,
+  a.album-cover-green-play-btn {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.25rem;
+  }
+
+  .album-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.4rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: var(--muted-text);
+  }
+
+  .search-results {
+    padding: 1rem 1rem 0 1rem;
+  }
+
+  .track-row.search-track-row {
+    padding: 0.75rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+
+  .track-row.search-track-row img {
+    width: 3rem;
+    height: 3rem;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 0.25rem;
+  }
+
+  .track-info {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .track-info .artist-wrap {
+    min-width: 0;
+    flex: 0 1 auto;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .track-info > h3,
+  .track-info > .artist-wrap {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 100%;
+  }
+
+  .track-info .artist-wrap a,
+  .track-info .artist-wrap .comma {
+    display: inline;
+  }
+  .track-info > * {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+}
+
+html {
+  font-size: clamp(0.875rem, 0.7rem + 0.5vw, 1.125rem);
+}
+
+h1.artist-name,
+h1.album-title {
+  font-size: clamp(2.75rem, 4vw + 1.5rem, 6rem);
+}
+h2,
+.track-info h3 {
+  font-size: clamp(1.1rem, 0.2vw + 1rem, 2rem);
+}
+.track-info p,
+.album-meta,
+.album-track-duration,
+.artist-followers,
+.track-row span,
+.album-type {
+  font-size: clamp(0.8rem, 0.14vw + 0.75rem, 1rem);
+}
+
+:root {
+  --gutter: clamp(0.75rem, 1vw, 1.5rem);
+}
+body,
+main {
+  padding-inline: var(--gutter);
 }
