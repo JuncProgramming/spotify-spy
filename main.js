@@ -623,7 +623,9 @@ const createArtist = (artist, tracks = [], albums = []) => {
     spotifyCard.appendChild(discographyHeader);
 
     albums?.forEach((album) => {
-      albumsContainer.appendChild(createAlbumCover(album));
+      const albumCover = createAlbumCover(album);
+      albumCover.classList.add('album-card', 'artist-album-card');
+      albumsContainer.appendChild(albumCover);
     });
     spotifyCard.appendChild(albumsContainer);
   }
