@@ -416,6 +416,10 @@ const createSearch = (tracks) => {
   const spotifyCard = document.createElement('div');
   spotifyCard.classList.add('spotify-card');
 
+  const container = document.createElement('div');
+  container.classList.add('page-container');
+  spotifyCard.appendChild(container);
+
   const searchResults = document.createElement('div');
   searchResults.classList.add('search-results');
 
@@ -451,7 +455,7 @@ const createSearch = (tracks) => {
   bestTrackContainer.appendChild(bestCard);
   searchResults.appendChild(bestTrackContainer);
   searchResults.appendChild(tracksContainer);
-  spotifyCard.appendChild(searchResults);
+  container.appendChild(searchResults);
 
   return spotifyCard;
 };
@@ -459,6 +463,10 @@ const createSearch = (tracks) => {
 const createMain = (newReleases) => {
   const spotifyCard = document.createElement('div');
   spotifyCard.classList.add('spotify-card');
+
+  const container = document.createElement('div');
+  container.classList.add('page-container');
+  spotifyCard.appendChild(container);
 
   if (!newReleases || newReleases.length === 0) {
     console.warn(`Missing new releases in createMain: ${newReleases}`);
@@ -485,7 +493,7 @@ const createMain = (newReleases) => {
   albumGridContainer.appendChild(albumGrid);
   newReleasesContainer.appendChild(sectionHeader);
   newReleasesContainer.appendChild(albumGridContainer);
-  spotifyCard.appendChild(newReleasesContainer);
+  container.appendChild(newReleasesContainer);
 
   return spotifyCard;
 };
@@ -493,6 +501,10 @@ const createMain = (newReleases) => {
 const createArtist = (artist, tracks = [], albums = []) => {
   const spotifyCard = document.createElement('div');
   spotifyCard.classList.add('spotify-card');
+
+  const container = document.createElement('div');
+  container.classList.add('page-container');
+  spotifyCard.appendChild(container);
 
   if (!artist) {
     console.warn(`Missing artist in createArtist: ${artist}`);
@@ -502,6 +514,7 @@ const createArtist = (artist, tracks = [], albums = []) => {
   document.title = artist.name || 'Spotify Spy';
 
   const hero = document.createElement('div');
+  hero.classList.add('artist-hero');
   const bgImage = artist.images?.[0]?.url;
 
   if (bgImage) {
@@ -512,21 +525,10 @@ const createArtist = (artist, tracks = [], albums = []) => {
     imgForColor.onload = () => {
       const colorThief = new ColorThief();
       const [r, g, b] = colorThief.getColor(imgForColor);
-
-      hero.style.backgroundImage = `
-      linear-gradient(
-        to bottom,
-        rgba(${r}, ${g}, ${b}, 1) 0%,
-        rgba(${r}, ${g}, ${b}, 0.7) 40%,
-        rgba(${r}, ${g}, ${b}, 0.3) 75%,
-        rgba(${r}, ${g}, ${b}, 0.1) 100%
-      )
-    `;
+      spotifyCard.style.setProperty('--album-accent', `rgb(${r}, ${g}, ${b})`);
     };
   } else {
-    hero.style.backgroundImage = `
-    linear-gradient(to bottom, #1c1c1c, #121212)
-  `;
+    spotifyCard.style.setProperty('--album-accent', '#1c1c1c');
   }
 
   const heroInner = document.createElement('div');
@@ -564,7 +566,7 @@ const createArtist = (artist, tracks = [], albums = []) => {
     artist.followers?.total?.toLocaleString() ?? 'Unknown number of'
   } listeners this month`;
 
-  spotifyCard.appendChild(hero);
+  container.appendChild(hero);
 
   if (tracks.length) {
     const popularHeader = document.createElement('h2');
@@ -614,7 +616,7 @@ const createArtist = (artist, tracks = [], albums = []) => {
 
     popularTracksContainer.appendChild(showLessMoreBtn);
 
-    spotifyCard.appendChild(popularTracksContainer);
+    container.appendChild(popularTracksContainer);
   }
 
   if (albums.length) {
@@ -623,14 +625,14 @@ const createArtist = (artist, tracks = [], albums = []) => {
 
     const albumsContainer = document.createElement('div');
     albumsContainer.id = 'artist-albums-container';
-    spotifyCard.appendChild(discographyHeader);
+    container.appendChild(discographyHeader);
 
     albums?.forEach((album) => {
       const albumCover = createAlbumCover(album);
       albumCover.classList.add('album-card', 'artist-album-card');
       albumsContainer.appendChild(albumCover);
     });
-    spotifyCard.appendChild(albumsContainer);
+    container.appendChild(albumsContainer);
   }
 
   badgeContainer.appendChild(badgeIcon);
@@ -651,6 +653,10 @@ const createAlbum = (album, tracks) => {
   const spotifyCard = document.createElement('div');
   spotifyCard.classList.add('spotify-card');
 
+  const container = document.createElement('div');
+  container.classList.add('page-container');
+  spotifyCard.appendChild(container);
+
   if (!album || !tracks || tracks.length === 0) {
     console.warn('Missing arguments in createAlbum:', { album, tracks });
     return displayUIErrorMessage(spotifyCard, 'No album found');
@@ -670,15 +676,7 @@ const createAlbum = (album, tracks) => {
     const colorThief = new ColorThief();
     const [r, g, b] = colorThief.getColor(imgForColor);
     spotifyCard.style.setProperty('--album-accent', `rgb(${r}, ${g}, ${b})`);
-
-    albumHero.style.background = `
-    linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 1), rgba(${r}, ${g}, ${b}, 0))
-  `;
   };
-
-  if (!albumImgUrl) {
-    albumHero.style.background = 'linear-gradient(135deg, #1c1c1c, #121212)';
-  }
 
   const albumImg = document.createElement('img');
   albumImg.classList.add('album-hero-img');
@@ -881,9 +879,9 @@ const createAlbum = (album, tracks) => {
   });
 
   albumTracklistContainer.appendChild(albumTracklist);
-  spotifyCard.appendChild(albumHero);
-  spotifyCard.appendChild(albumControls);
-  spotifyCard.appendChild(albumTracklistContainer);
+  container.appendChild(albumHero);
+  container.appendChild(albumControls);
+  container.appendChild(albumTracklistContainer);
 
   return spotifyCard;
 };
@@ -891,6 +889,10 @@ const createAlbum = (album, tracks) => {
 const createFavorites = (tracks) => {
   const spotifyCard = document.createElement('div');
   spotifyCard.classList.add('spotify-card');
+
+  const container = document.createElement('div');
+  container.classList.add('page-container');
+  spotifyCard.appendChild(container);
 
   if (!tracks || tracks.length === 0) {
     console.warn(`Missing tracks in createFavorites: ${tracks}`);
@@ -908,11 +910,7 @@ const createFavorites = (tracks) => {
   imgForColor.onload = () => {
     const colorThief = new ColorThief();
     const [r, g, b] = colorThief.getColor(imgForColor);
-    spotifyCard.style.setProperty('--album-accent', `rgb(${r}, ${g}, ${b})`);
-
-    albumHero.style.background = `
-    linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 1), rgba(${r}, ${g}, ${b}, 0))
-  `;
+    container.style.setProperty('--album-accent', `rgb(${r}, ${g}, ${b})`);
   };
 
   const albumImg = document.createElement('img');
@@ -1088,9 +1086,9 @@ const createFavorites = (tracks) => {
   });
 
   albumTracklistContainer.appendChild(albumTracklist);
-  spotifyCard.appendChild(albumHero);
-  spotifyCard.appendChild(albumControls);
-  spotifyCard.appendChild(albumTracklistContainer);
+  container.appendChild(albumHero);
+  container.appendChild(albumControls);
+  container.appendChild(albumTracklistContainer);
 
   return spotifyCard;
 };

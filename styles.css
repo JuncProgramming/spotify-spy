@@ -39,6 +39,13 @@
   min-height: 100vh;
 }
 
+.page-container {
+  width: 100%;
+  max-width: 100rem;
+  margin-inline: 0;
+  box-sizing: border-box;
+}
+
 html,
 body {
   margin: 0;
@@ -207,7 +214,7 @@ h2 {
 }
 
 .track-row.search-track-row {
-  /* max-width: 90rem; */
+  max-width: 90rem;
   padding: 0.75rem;
   width: 70%;
 }
@@ -872,7 +879,7 @@ a.album-name.play-info {
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  /* max-width: 90rem; */
+  max-width: 90rem;
   padding: 0;
 }
 
@@ -1044,6 +1051,7 @@ div.album-card-info {
 #new-releases-container {
   padding: 1rem 1rem 0 2rem;
   box-sizing: border-box;
+  max-width: 110rem;
 }
 
 .album-grid {
@@ -1396,7 +1404,6 @@ button.show-less-more-btn:hover {
   .album-track-duration,
   .album-tracklist-header,
   .navigation-btns,
-  .sidebar,
   #best-track-container,
   #tracks-header,
   #track-duration,
@@ -1408,6 +1415,12 @@ button.show-less-more-btn:hover {
   .album-type,
   a.album-cover-green-play-btn {
     display: none;
+  }
+}
+
+@media (min-width: 100rem) {
+  .page-container {
+    margin-inline: auto;
   }
 }
 
