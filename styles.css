@@ -1185,10 +1185,6 @@ button.show-less-more-btn:hover {
     max-width: 100%;
   }
 
-  #popular-tracks-container .artist-track-row .elipsis-btn i {
-    opacity: 1;
-  }
-
   #artist-albums-container {
     grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
     gap: 0;
@@ -1387,7 +1383,8 @@ button.show-less-more-btn:hover {
   .album-track-row button.elipsis-btn i,
   .track-row.search-track-row button.elipsis-btn i,
   .album-track-row button.save-btn i,
-  .track-row.search-track-row button.save-btn i {
+  .track-row.search-track-row button.save-btn i,
+  #popular-tracks-container .artist-track-row .elipsis-btn i {
     opacity: 1;
   }
 

@@ -12,6 +12,8 @@ const state = {
   currentPage: window.location.pathname,
 };
 
+const mobile = window.matchMedia('(max-width: 480px)');
+
 const BASE_URL = 'https://api.spotify.com/v1/';
 
 const getToken = async () => {
@@ -241,6 +243,7 @@ const createTrackCard = (track, number = null) => {
 
   const row = document.createElement('div');
   row.classList.add('track-row');
+  row.dataset.playUrl = track.external_urls.spotify || '#';
 
   const imgContainer = document.createElement('div');
   imgContainer.style.position = 'relative';
@@ -265,7 +268,7 @@ const createTrackCard = (track, number = null) => {
     const play = document.createElement('a');
     play.classList.add('play-btn');
     play.style.position = 'absolute';
-    play.style.top = '45%';
+    play.style.top = '50%';
     play.style.left = '50%';
     play.style.transform = 'translate(-50%, -50%)';
     play.href = track.external_urls?.spotify || '#';
@@ -745,13 +748,8 @@ const createAlbum = (album, tracks) => {
   const saveIcon = document.createElement('i');
   saveIcon.className = 'fa-solid scalable';
   saveIcon.classList.add('fa-solid', isFavorite ? 'fa-check' : 'fa-plus');
-  saveIcon.style.position = 'absolute';
-  saveIcon.style.top = '52%';
-  saveIcon.style.left = '50%';
-  saveIcon.style.transform = 'translate(-50%, -50%)';
 
   const saveBtn = document.createElement('button');
-  saveBtn.style.position = 'relative';
   saveBtn.classList.add('album-btn', 'album-save-btn');
   if (isFavorite) {
     saveBtn.classList.add('saved');
@@ -807,6 +805,7 @@ const createAlbum = (album, tracks) => {
   tracks.forEach((track, index) => {
     const albumTrackRow = document.createElement('div');
     albumTrackRow.classList.add('track-row', 'album-track-row');
+    albumTrackRow.dataset.playUrl = track.external_urls.spotify || '#';
 
     const numberContainer = document.createElement('div');
     numberContainer.classList.add('container-list-number');
@@ -845,7 +844,6 @@ const createAlbum = (album, tracks) => {
     saveIcon.classList.add('fa-solid', isFavorite ? 'fa-check' : 'fa-plus');
 
     const saveBtn = document.createElement('button');
-    saveBtn.type = 'button';
     saveBtn.classList.add('save-btn');
     if (isFavorite) {
       saveBtn.classList.add('saved');
@@ -1014,6 +1012,7 @@ const createFavorites = (tracks) => {
   tracks.forEach((track, index) => {
     const albumTrackRow = document.createElement('div');
     albumTrackRow.classList.add('track-row', 'album-track-row');
+    albumTrackRow.dataset.playUrl = track.external_urls.spotify || '#';
 
     const numberContainer = document.createElement('div');
     numberContainer.classList.add('container-list-number');
@@ -1345,4 +1344,14 @@ init();
 // Reload the app after navigating back or forward
 window.addEventListener('pageshow', () => {
   init();
+});
+
+document.addEventListener('click', (e) => {
+  if (!mobile.matches) return;
+  const row = e.target.closest('.track-row');
+  if (!row) return;
+  // Dont click on visible buttons or anchors
+  if (e.target.closest('button, a')) return;
+  const url = row.dataset.playUrl;
+  if (url) window.open(url, '_blank');
 });
