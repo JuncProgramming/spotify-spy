@@ -207,6 +207,7 @@ h2 {
 }
 
 .track-row.search-track-row {
+  /* max-width: 90rem; */
   padding: 0.75rem;
   width: 70%;
 }
@@ -871,6 +872,7 @@ a.album-name.play-info {
   align-items: center;
   justify-content: flex-start;
   width: 100%;
+  /* max-width: 90rem; */
   padding: 0;
 }
 
@@ -952,12 +954,12 @@ span.album-track-duration {
 }
 
 #artist-albums-container {
-  display: flex;
-  flex-wrap: wrap;
-  max-width: 100%;
   align-items: flex-start;
   margin: 0 2rem 1rem 2rem;
   box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.75rem;
 }
 
 a.album-card {
@@ -1046,7 +1048,7 @@ div.album-card-info {
 
 .album-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
   gap: 0.75rem;
 }
 
@@ -1183,6 +1185,15 @@ button.show-less-more-btn:hover {
     max-width: 100%;
   }
 
+  #popular-tracks-container .artist-track-row .elipsis-btn i {
+    opacity: 1;
+  }
+
+  #artist-albums-container {
+    grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+    gap: 0;
+  }
+
   .album-hero {
     display: flex;
     flex-direction: column;
@@ -1286,7 +1297,7 @@ button.show-less-more-btn:hover {
   a.album-card.artist-album-card {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 100%;
     overflow: hidden;
     box-sizing: border-box;
   }
@@ -1315,8 +1326,19 @@ button.show-less-more-btn:hover {
     color: var(--muted-text);
   }
 
+  #popular-tracks-container h2 {
+    font-size: 1.5rem;
+    margin: 2.5rem 2rem 1rem 2rem;
+  }
+
   #popular-tracks-container {
     width: 100%;
+    padding: 0;
+    margin: 0 auto 3rem 0;
+  }
+
+  .spotify-card > h2 {
+    font-size: 1.5rem;
   }
 
   .artist-track-row {
@@ -1347,13 +1369,28 @@ button.show-less-more-btn:hover {
 
   .album-track-row {
     display: grid;
-    grid-template-columns: minmax(0, 4fr) 2rem 2rem;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 4fr) min-content min-content;
     align-items: center;
     justify-content: flex-start;
     width: 100%;
   }
 
-  /* Elements hidden on mobile */
+  .album-track-row button.elipsis-btn {
+    padding: 0 0.5rem 0 0;
+  }
+
+  .search-track-row button.elipsis-btn {
+    padding: 0 0.5rem 0 0;
+  }
+
+  .album-track-row button.elipsis-btn i,
+  .track-row.search-track-row button.elipsis-btn i,
+  .album-track-row button.save-btn i,
+  .track-row.search-track-row button.save-btn i {
+    opacity: 1;
+  }
+
   .album-tracklist-col.number,
   .album-tracklist-col.plays,
   .album-tracklist-col.time,
@@ -1371,7 +1408,8 @@ button.show-less-more-btn:hover {
   .artist-verified,
   .artist-track-row .save-btn,
   .artist-followers,
-  .album-type {
+  .album-type,
+  a.album-cover-green-play-btn {
     display: none;
   }
 }
