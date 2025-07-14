@@ -9,6 +9,24 @@
   --light-text: #ffffff;
   --muted-text: #b3b3b3;
   --album-button: #a3a3a3;
+  --album-accent: #1c1c1c;
+  --album-accent-rgb: 28, 28, 28;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: var(--dark-bg);
+  border-radius: 1rem;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: var(--light-bg);
+  border-radius: 1rem;
+  border: 3px solid var(--dark-bg);
 }
 
 .spotify-card::before {
@@ -21,7 +39,7 @@
   background: linear-gradient(
     to bottom,
     var(--album-accent, #1c1c1c),
-    transparent 90%
+    transparent 100%
   );
   z-index: -1;
   pointer-events: none;
@@ -463,21 +481,6 @@ h2 {
   display: block;
 }
 
-.artist-hero {
-  border-top-left-radius: 0.75rem;
-  border-top-right-radius: 0.75rem;
-  width: 100%;
-  background: linear-gradient(
-      135deg,
-      rgba(28, 28, 28, 0.8),
-      rgba(18, 18, 18, 0.8)
-    ),
-    url('./media/default-cover.png');
-  background-size: cover;
-  background-position: center;
-  margin: 0;
-}
-
 .hero-inner {
   display: flex;
   align-items: flex-end;
@@ -547,6 +550,10 @@ h2 {
   font-size: 1rem;
   color: var(--light-text);
   margin: 1rem 0 0 0;
+}
+
+.discography-header {
+  margin: 2.5rem 2rem 1rem 2rem;
 }
 
 .track-row button.elipsis-btn,
@@ -1149,6 +1156,16 @@ button.show-less-more-btn:hover {
 }
 
 @media (max-width: 480px) {
+  .spotify-card::before {
+    height: 50rem;
+    background: linear-gradient(
+      to bottom,
+      rgba(78, 78, 78, 0.5),
+      rgba(28, 28, 28, 0.15) 70%,
+      transparent 100%
+    ) !important;
+  }
+
   .title-container {
     padding: 1rem;
     margin: 0;
@@ -1162,27 +1179,20 @@ button.show-less-more-btn:hover {
   }
 
   .hero-inner {
-    padding: 6rem 1.5rem 0.5rem 1.5rem;
+    padding: 8rem 1.5rem 0.5rem 1.5rem;
   }
 
   .artist-hero {
-    padding: 2rem 1rem;
-    position: relative;
-    overflow: hidden;
+    background: var(--artist-bg-mobile) center / cover no-repeat !important;
   }
 
-  .artist-hero::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.65) 0%,
-        rgba(0, 0, 0, 1) 75%
-      ),
-      var(--artist-bg) center / cover no-repeat;
-    opacity: 0.9;
-    z-index: -1;
+  .artist-hero-img {
+    display: none;
+  }
+
+  .artist-hero::after,
+  .artist-hero::before {
+    display: none !important;
   }
 
   .artist-hero-info h1.artist-name {
@@ -1191,6 +1201,10 @@ button.show-less-more-btn:hover {
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
+  }
+
+  button.show-less-more-btn {
+    margin: 1em 2.3em;
   }
 
   #artist-albums-container {
@@ -1330,9 +1344,14 @@ button.show-less-more-btn:hover {
     color: var(--muted-text);
   }
 
-  #popular-tracks-container h2 {
+  .discography-header {
     font-size: 1.5rem;
     margin: 2.5rem 2rem 1rem 2rem;
+  }
+
+  .popular-header {
+    font-size: 1.5rem;
+    margin: 1.5rem 2rem 1rem 2rem;
   }
 
   #popular-tracks-container {
@@ -1388,6 +1407,41 @@ button.show-less-more-btn:hover {
     padding: 0 0.5rem 0 0;
   }
 
+  .sidebar {
+    gap: 0.5rem;
+    padding: 0;
+    flex-direction: row;
+    justify-content: space-around;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4.5rem;
+    width: 100%;
+    z-index: 1000;
+    border-radius: 0;
+    overflow-x: auto;
+  }
+
+  .sidebar .side-tab:first-child {
+    margin-left: 0.5rem;
+  }
+
+  .sidebar .side-tab:last-child {
+    margin-right: 0.5rem;
+  }
+
+  .side-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .side-tab img {
+    width: 3rem;
+    height: 3rem;
+  }
+
   .album-track-row button.elipsis-btn i,
   .track-row.search-track-row button.elipsis-btn i,
   .album-track-row button.save-btn i,
@@ -1419,6 +1473,10 @@ button.show-less-more-btn:hover {
 }
 
 @media (min-width: 100rem) {
+  .artist-hero {
+    background-image: none !important;
+  }
+
   .page-container {
     margin-inline: auto;
   }
