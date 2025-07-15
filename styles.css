@@ -1155,15 +1155,196 @@ button.show-less-more-btn:hover {
   color: var(--light-text);
 }
 
+@media (min-width: 481px) and (max-width: 768px) {
+  .search-results {
+    padding: 1rem 2rem;
+  }
+
+  .track-row.search-track-row {
+    padding: 0.75rem 1.5rem 0.75rem 1rem;
+    gap: 1rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+
+  #tracks-header {
+    font-size: 1.3rem;
+  }
+
+  main {
+    padding-bottom: 4.5rem;
+  }
+
+  .album-track-row {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: minmax(0, 4fr) min-content min-content min-content;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .album-tracklist-container {
+    width: 98%;
+    margin: 0 auto 1.5rem auto;
+    position: relative;
+    z-index: 1;
+    padding: 0 1.5rem;
+    box-sizing: border-box;
+    display: block;
+  }
+
+  .title-container {
+    gap: 2rem;
+  }
+
+  .hero-inner {
+    padding: 10rem 1.5rem 0.5rem 1.5rem;
+  }
+
+  .album-hero-info {
+    width: 100%;
+  }
+
+  .track-row img {
+    margin: 0;
+  }
+
+  .track-row button.save-btn,
+  .track-row button.save-btn:hover {
+    padding: 0;
+  }
+
+  .track-row span {
+    margin: 0rem;
+  }
+
+  .album-meta {
+    word-break: break-word;
+    flex-wrap: wrap;
+  }
+
+  #popular-tracks-container {
+    width: 100%;
+    margin: 0 auto 3rem 0;
+  }
+
+  .sidebar {
+    gap: 0.5rem;
+    padding: 0;
+    flex-direction: row;
+    justify-content: space-around;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4.5rem;
+    width: 100%;
+    z-index: 1000;
+    border-radius: 0;
+    overflow-x: auto;
+  }
+
+  .sidebar .side-tab:first-child {
+    margin-left: 0.5rem;
+  }
+
+  .sidebar .side-tab:last-child {
+    margin-right: 0.5rem;
+  }
+
+  .side-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .side-tab img {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .track-row button.elipsis-btn,
+  .track-row button.elipsis-btn:hover {
+    padding: 0;
+  }
+
+  .discography-header {
+    font-size: 1.5rem;
+    margin: 2.5rem 2rem 1rem 2rem;
+  }
+
+  .popular-header {
+    font-size: 1.5rem;
+  }
+
+  .artist-track-row .container-list-number {
+    width: auto;
+  }
+
+  .artist-track-row:hover .list-number {
+    visibility: visible;
+    width: 3ch;
+  }
+
+  .artist-track-row .list-number {
+    width: 3ch;
+  }
+
+  .track-row {
+    gap: 1rem;
+    padding: 0.5rem 1.5rem;
+  }
+
+  .album-controls {
+    margin: 0.5rem 0 1.5rem 2.5rem;
+  }
+
+  .track-row img {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.5rem;
+  }
+
+  .artist-hero {
+    background: var(--artist-bg-mobile) center / cover no-repeat !important;
+  }
+
+  .album-track-row button.elipsis-btn i,
+  .track-row.search-track-row button.elipsis-btn i,
+  .album-track-row button.save-btn i,
+  .track-row.search-track-row button.save-btn i,
+  #popular-tracks-container .artist-track-row .elipsis-btn i,
+  .track-row:hover .cover-img {
+    opacity: 1;
+  }
+
+  .album-tracklist-col.number,
+  .album-tracklist-col.plays,
+  .album-tracklist-col.time,
+  .container-list-number,
+  .play-info,
+  .album-tracklist-header,
+  #best-track-container,
+  .play-btn,
+  .artist-hero-img,
+  .artist-verified,
+  .artist-track-row .save-btn,
+  .artist-followers,
+  .album-type,
+  a.album-cover-green-play-btn,
+  .artist-hero-img {
+    display: none;
+  }
+}
+
 @media (max-width: 480px) {
-  .spotify-card::before {
-    height: 50rem;
-    background: linear-gradient(
-      to bottom,
-      rgba(78, 78, 78, 0.5),
-      rgba(28, 28, 28, 0.15) 70%,
-      transparent 100%
-    ) !important;
+  main {
+    padding-bottom: 4.5rem;
   }
 
   .title-container {
