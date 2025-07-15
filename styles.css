@@ -11,6 +11,7 @@
   --album-button: #a3a3a3;
   --album-accent: #1c1c1c;
   --album-accent-rgb: 28, 28, 28;
+  --gutter: clamp(0.75rem, 1vw, 1.5rem);
 }
 
 .sidebar::-webkit-scrollbar {
@@ -35,7 +36,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 40rem;
+  height: 40%;
   background: linear-gradient(
     to bottom,
     var(--album-accent, #1c1c1c),
@@ -80,7 +81,6 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  min-height: 100vh;
 }
 
 main {
@@ -238,6 +238,8 @@ h2 {
 }
 
 .track-row {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
   border-radius: 0.375rem;
@@ -485,7 +487,7 @@ h2 {
   display: flex;
   align-items: flex-end;
   gap: 2rem;
-  padding: 4rem 3rem 2rem 2rem;
+  padding: 4rem 2rem 2rem 2rem;
   width: 100%;
   box-sizing: border-box;
 }
@@ -862,6 +864,8 @@ i.fa-clock {
 }
 
 .album-track-row {
+  position: relative;
+  z-index: 2;
   padding: 0.75rem 0;
   background: transparent;
 }
@@ -1367,15 +1371,6 @@ button.show-less-more-btn:hover {
     background: var(--artist-bg-mobile) center / cover no-repeat !important;
   }
 
-  .artist-hero-img {
-    display: none;
-  }
-
-  .artist-hero::after,
-  .artist-hero::before {
-    display: none !important;
-  }
-
   .artist-hero-info h1.artist-name {
     font-size: clamp(2rem, 4vw + 1.5rem, 4rem);
     display: block;
@@ -1414,7 +1409,12 @@ button.show-less-more-btn:hover {
   }
 
   .album-controls {
-    margin: 1.5rem 0 1rem 1.5rem;
+    margin: 2rem 0 1.5rem 1.5rem;
+  }
+
+  .track-row button.save-btn,
+  .track-row button.save-btn:hover {
+    padding: 0;
   }
 
   .album-tracklist-container {
@@ -1432,11 +1432,12 @@ button.show-less-more-btn:hover {
   }
 
   .track-row.search-track-row {
-    padding: 0.75rem;
+    padding: 0.75rem 1.25rem 0.75rem 0.75rem;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
     display: flex;
+    gap: 1rem;
     align-items: center;
     flex-wrap: nowrap;
   }
@@ -1446,11 +1447,8 @@ button.show-less-more-btn:hover {
     height: 3rem;
     flex-shrink: 0;
     object-fit: cover;
-    border-radius: 0.25rem;
-  }
-
-  .track-row:hover .cover-img {
-    opacity: 1;
+    border-radius: 0.5rem;
+    margin: 0;
   }
 
   .track-info {
@@ -1563,15 +1561,12 @@ button.show-less-more-btn:hover {
     width: 3ch;
   }
 
-  .artist-track-row button.elipsis-btn {
-    padding: 0 1rem 0 1rem;
-  }
-
   .search-results {
     padding: 0;
   }
 
   .album-track-row {
+    padding: 0.5rem 1.5rem 0.5rem 1.5rem;
     display: grid;
     gap: 1rem;
     grid-template-columns: minmax(0, 4fr) min-content min-content;
@@ -1580,12 +1575,14 @@ button.show-less-more-btn:hover {
     width: 100%;
   }
 
-  .album-track-row button.elipsis-btn {
-    padding: 0 0.5rem 0 0;
+  .track-row.album-track-row button.elipsis-btn,
+  .track-row.album-track-row button.elipsis-btn:hover {
+    padding: 0;
   }
 
-  .search-track-row button.elipsis-btn {
-    padding: 0 0.5rem 0 0;
+  .track-row.search-track-row button.elipsis-btn,
+  .track-row.search-track-row button.elipsis-btn:hover {
+    padding: 0;
   }
 
   .sidebar {
@@ -1627,7 +1624,8 @@ button.show-less-more-btn:hover {
   .track-row.search-track-row button.elipsis-btn i,
   .album-track-row button.save-btn i,
   .track-row.search-track-row button.save-btn i,
-  #popular-tracks-container .artist-track-row .elipsis-btn i {
+  #popular-tracks-container .artist-track-row .elipsis-btn i,
+  .track-row:hover .cover-img {
     opacity: 1;
   }
 
@@ -1648,7 +1646,8 @@ button.show-less-more-btn:hover {
   .artist-track-row .save-btn,
   .artist-followers,
   .album-type,
-  a.album-cover-green-play-btn {
+  a.album-cover-green-play-btn,
+  .artist-hero-img {
     display: none;
   }
 }
@@ -1684,9 +1683,6 @@ h2,
   font-size: clamp(0.8rem, 0.14vw + 0.75rem, 1rem);
 }
 
-:root {
-  --gutter: clamp(0.75rem, 1vw, 1.5rem);
-}
 body,
 main {
   padding-inline: var(--gutter);
