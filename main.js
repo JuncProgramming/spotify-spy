@@ -12,7 +12,7 @@ const state = {
   currentPage: window.location.pathname,
 };
 
-const mobile = window.matchMedia('(max-width: 480px)');
+const mediaQuery = window.matchMedia('(max-width: 768px)');
 
 const BASE_URL = 'https://api.spotify.com/v1/';
 
@@ -150,7 +150,6 @@ const createCommaSeparatedArtists = (artists, className = 'artist') => {
       const comma = document.createElement('span');
       comma.classList.add('comma');
       comma.textContent = ',';
-      comma.style.color = '#bbbbbb';
       container.appendChild(comma);
     }
   });
@@ -249,9 +248,7 @@ const createTrackCard = (track, number = null) => {
   imgContainer.style.position = 'relative';
 
   const img = document.createElement('img');
-  img.style.position = 'relative';
-  img.style.zIndex = '1';
-  img.src = track.album?.images[2]?.url || './media/default-cover.png';
+  img.src = track.album?.images[1]?.url || './media/default-cover.png';
   img.alt = track.name ? `${track.name} cover` : 'Cover';
   img.style.display = 'block';
   img.loading = 'lazy';
@@ -259,7 +256,6 @@ const createTrackCard = (track, number = null) => {
   if (number) {
     const numberContainer = document.createElement('div');
     numberContainer.classList.add('container-list-number');
-    numberContainer.style.position = 'relative';
 
     const listNumber = document.createElement('p');
     listNumber.classList.add('list-number');
@@ -268,6 +264,7 @@ const createTrackCard = (track, number = null) => {
     const play = document.createElement('a');
     play.classList.add('play-btn');
     play.style.position = 'absolute';
+    play.style.lineHeight = '1';
     play.style.top = '50%';
     play.style.left = '50%';
     play.style.transform = 'translate(-50%, -50%)';
@@ -288,8 +285,9 @@ const createTrackCard = (track, number = null) => {
     play.classList.add('play-btn');
     play.style.position = 'absolute';
     play.style.zIndex = '2';
-    play.style.top = '45%';
-    play.style.left = '40%';
+    play.style.lineHeight = '1';
+    play.style.top = '50%';
+    play.style.left = '50%';
     play.style.transform = 'translate(-50%, -50%)';
     play.href = track.external_urls?.spotify || '#';
     play.target = '_blank';
@@ -525,7 +523,9 @@ const createArtist = (artist, tracks = [], albums = []) => {
     imgForColor.onload = () => {
       const colorThief = new ColorThief();
       const [r, g, b] = colorThief.getColor(imgForColor);
+      hero.style.setProperty('--artist-bg-mobile', `url(${bgImage})`);
       spotifyCard.style.setProperty('--album-accent', `rgb(${r}, ${g}, ${b})`);
+      hero.style.backgroundImage = `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 0.5), transparent 90%)`;
     };
   } else {
     spotifyCard.style.setProperty('--album-accent', '#1c1c1c');
@@ -570,6 +570,7 @@ const createArtist = (artist, tracks = [], albums = []) => {
 
   if (tracks.length) {
     const popularHeader = document.createElement('h2');
+    popularHeader.classList.add('popular-header');
     popularHeader.textContent = 'Popular';
 
     const popularTracksContainer = document.createElement('div');
@@ -621,6 +622,7 @@ const createArtist = (artist, tracks = [], albums = []) => {
 
   if (albums.length) {
     const discographyHeader = document.createElement('h2');
+    discographyHeader.classList.add('discography-header');
     discographyHeader.textContent = 'Discography';
 
     const albumsContainer = document.createElement('div');
@@ -676,6 +678,8 @@ const createAlbum = (album, tracks) => {
     const colorThief = new ColorThief();
     const [r, g, b] = colorThief.getColor(imgForColor);
     spotifyCard.style.setProperty('--album-accent', `rgb(${r}, ${g}, ${b})`);
+    spotifyCard.style.setProperty('--album-accent-rgb', `${r}, ${g}, ${b})`);
+    container.style.setProperty('--album-bg-url', `url(${albumImgUrl})`);
   };
 
   const albumImg = document.createElement('img');
@@ -816,7 +820,8 @@ const createAlbum = (album, tracks) => {
     const play = document.createElement('a');
     play.classList.add('play-btn');
     play.style.position = 'absolute';
-    play.style.top = '45%';
+    play.style.lineHeight = '1';
+    play.style.top = '50%';
     play.style.left = '50%';
     play.style.transform = 'translate(-50%, -50%)';
     play.href = track.external_urls?.spotify || '#';
@@ -910,7 +915,7 @@ const createFavorites = (tracks) => {
   imgForColor.onload = () => {
     const colorThief = new ColorThief();
     const [r, g, b] = colorThief.getColor(imgForColor);
-    container.style.setProperty('--album-accent', `rgb(${r}, ${g}, ${b})`);
+    spotifyCard.style.setProperty('--album-accent', `rgb(${r}, ${g}, ${b})`);
   };
 
   const albumImg = document.createElement('img');
@@ -1023,7 +1028,8 @@ const createFavorites = (tracks) => {
     const play = document.createElement('a');
     play.classList.add('play-btn');
     play.style.position = 'absolute';
-    play.style.top = '45%';
+    play.style.lineHeight = '1';
+    play.style.top = '50%';
     play.style.left = '50%';
     play.style.transform = 'translate(-50%, -50%)';
     play.href = track.external_urls?.spotify || '#';
@@ -1345,7 +1351,7 @@ window.addEventListener('pageshow', () => {
 });
 
 document.addEventListener('click', (e) => {
-  if (!mobile.matches) return;
+  if (!mediaQuery.matches) return;
   const row = e.target.closest('.track-row');
   if (!row) return;
   // Dont click on visible buttons or anchors
