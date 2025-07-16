@@ -110,10 +110,6 @@ main {
 }
 
 .nav-btn {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
   font-size: 1.5rem;
   color: var(--muted-text);
   transition: color 0.2s ease;
@@ -137,6 +133,15 @@ main {
   position: relative;
   text-align: center;
   color: var(--primary-green);
+  font-size: 2rem;
+  font-weight: bold;
+  text-decoration: none;
+  font-family: 'Segoe UI', sans-serif;
+  display: inline-block;
+}
+
+#search-title:hover {
+  color: var(--hover-green);
 }
 
 #search {
@@ -162,17 +167,17 @@ input:focus {
 }
 
 button {
-  padding: 0.75rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  line-height: 1;
+  padding: 0;
   font-size: 1rem;
   border: none;
   border-radius: 0.3125rem;
-  background: var(--primary-green);
   color: var(--light-text);
   cursor: pointer;
-}
-
-button:hover {
-  background: var(--hover-green);
 }
 
 .sidebar {
@@ -189,7 +194,6 @@ button:hover {
 }
 
 .side-tab {
-  background-color: transparent;
   aspect-ratio: 1 / 1;
   border-radius: 0.9rem;
   display: flex;
@@ -223,7 +227,6 @@ h2 {
 }
 
 .search-results {
-  display: none;
   justify-content: flex-start;
   align-items: flex-start;
   gap: 3rem;
@@ -232,12 +235,30 @@ h2 {
 }
 
 .track-row.search-track-row {
+  gap: 1rem;
   max-width: 90rem;
-  padding: 0.75rem;
+  padding: 0.75rem 1.25rem 0.75rem 0.75rem;
   width: 70%;
 }
 
+.track-row.search-track-row > *:not(:first-child, :last-child) {
+  margin-right: 0;
+}
+
+.track-row .track-info {
+  min-width: 0;
+}
+
+.track-row .track-info h3,
+.track-row .track-info p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .track-row {
+  flex-wrap: nowrap;
+  padding: 0.25rem 1.5rem 0.25rem 0.25rem;
   position: relative;
   z-index: 2;
   display: flex;
@@ -248,6 +269,10 @@ h2 {
   box-sizing: border-box;
 }
 
+.track-row > *:not(:first-child, :last-child) {
+  margin-right: 1rem;
+}
+
 .track-row:hover {
   background: var(--light-bg);
 }
@@ -256,7 +281,6 @@ h2 {
   width: 3.125rem;
   height: 3.125rem;
   border-radius: 0.25rem;
-  margin-right: 1rem;
 }
 
 .track-info {
@@ -266,7 +290,6 @@ h2 {
 .track-info h3 {
   font-weight: normal;
   margin: 0;
-  font-size: 1.1rem;
 }
 
 .track-info p {
@@ -276,15 +299,13 @@ h2 {
 }
 
 .track-row span {
-  margin: 1rem;
-  font-size: 0.9rem;
+  margin: 0;
   color: var(--muted-text);
   white-space: nowrap;
 }
 
 .track-row span.comma {
   display: inline-block;
-  color: var(--muted-text);
   margin: 0 0.25rem 0 0;
 }
 
@@ -459,7 +480,6 @@ h2 {
 .best-track-card a {
   color: var(--muted-text);
   text-decoration: none;
-  font-size: 1rem;
 }
 
 .best-track-card a:hover {
@@ -544,46 +564,16 @@ h2 {
   padding: 0;
   margin: 0;
   color: var(--light-text);
-  font-size: 5rem;
   font-weight: 900;
 }
 
 .artist-followers {
-  font-size: 1rem;
   color: var(--light-text);
   margin: 1rem 0 0 0;
 }
 
 .discography-header {
-  margin: 2.5rem 2rem 1rem 2rem;
-}
-
-.track-row button.elipsis-btn,
-.track-row button.elipsis-btn:hover {
-  padding: 0 1rem 0 0;
-  font-size: 1rem;
-  background: transparent;
-}
-
-.elipsis-btn,
-.elipsis-btn:hover {
-  padding: 0 1rem 0 1rem;
-  font-size: 1rem;
-  background: transparent;
-}
-
-.track-row.album-track-row button.save-btn,
-.track-row.album-track-row button.save-btn:hover {
-  padding: 0;
-  font-size: 1rem;
-  background: transparent;
-}
-
-.track-row button.save-btn,
-.track-row button.save-btn:hover {
-  padding: 0 1rem;
-  font-size: 1rem;
-  background: transparent;
+  margin: 2.5rem 1.5rem 1rem 1.5rem;
 }
 
 .play-icon,
@@ -630,7 +620,7 @@ i {
   transition: background-image 0.5s ease-in-out;
   display: flex;
   gap: 2rem;
-  padding: 4rem 3rem 1.5rem 2.5rem;
+  padding: 4rem 2.5rem 1.5rem 2.5rem;
   width: 100%;
   box-sizing: border-box;
 }
@@ -657,13 +647,13 @@ i {
 }
 
 .album-type {
-  font-size: 1rem;
   color: var(--light-text);
   font-weight: 400;
 }
 
 .album-title {
-  font-size: 6rem;
+  white-space: normal;
+  word-break: break-word;
   font-weight: 900;
   color: #fff;
   margin: 0 0 1rem 0;
@@ -673,7 +663,6 @@ i {
 .album-meta {
   display: flex;
   gap: 0.3rem;
-  font-size: 1rem;
   color: var(--muted-text);
 }
 
@@ -695,7 +684,6 @@ i {
 }
 
 .album-btn {
-  background-color: var(--album-button);
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -705,8 +693,8 @@ i {
   outline: none;
   cursor: pointer;
   border-radius: 50%;
-  font-size: 1rem;
-  line-height: 2rem;
+  font-size: 1.2rem;
+  line-height: 1;
   width: 2rem;
   height: 2rem;
   padding: 0;
@@ -723,19 +711,9 @@ i {
 
 a.album-play-btn {
   text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 3.5rem;
   height: 3.5rem;
-  border-radius: 50%;
   background: var(--album-btn-green);
-  color: var(--very-dark-bg);
-  font-size: 2rem;
-  border: none;
-  transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  outline: none;
 }
 
 a.album-play-btn i {
@@ -754,13 +732,12 @@ a.album-play-btn:hover i {
 a.album-play-btn:hover {
   text-decoration: none;
   background: var(--album-btn-hover);
-  transform: scale(1.01);
 }
 
 .album-btn i {
+  line-height: 1;
   color: var(--album-button);
   font-size: 1.2rem;
-  font-weight: 700;
 }
 
 .album-btn:hover i {
@@ -769,17 +746,11 @@ a.album-play-btn:hover {
 
 .album-save-btn {
   border: 0.125rem solid var(--album-button);
-  background: transparent;
-  font-size: 1.3rem;
-  line-height: 1;
 }
 
 .album-save-btn:hover,
 .album-more-btn:hover {
-  scale: 1.05;
   border-color: var(--light-text);
-  color: var(--light-text);
-  background-color: transparent;
 }
 
 .album-tracklist-col.time {
@@ -821,7 +792,6 @@ i.fa-clock {
 .album-save-btn.saved {
   border: none;
   background: var(--album-btn-green);
-  color: var(--very-dark-bg);
 }
 
 .album-save-btn.saved:hover {
@@ -847,10 +817,7 @@ i.fa-clock {
 }
 
 .save-btn i.fa-check {
-  background-color: var(--album-btn-green);
-  color: var(--very-dark-bg);
   font-size: 0.6rem;
-  line-height: 1.5rem;
 }
 
 .album-tracklist-container {
@@ -865,9 +832,11 @@ i.fa-clock {
 
 .album-track-row {
   position: relative;
-  z-index: 2;
-  padding: 0.75rem 0;
-  background: transparent;
+  padding: 0.25rem 0;
+}
+
+.album-track-row > *:not(:first-child, :last-child) {
+  margin-right: 0;
 }
 
 .album-tracklist-col.plays,
@@ -885,13 +854,12 @@ a.album-name.play-info {
 .album-track-row {
   display: grid;
   grid-template-columns:
-    5rem minmax(200px, 4fr) minmax(150px, 3fr) 3rem
-    5ch 3rem;
+    5rem 1fr 1fr 3rem
+    5ch 3rem 0.5rem; /* 0.5rem column acts as a padding */
   align-items: center;
   justify-content: flex-start;
   width: 100%;
   max-width: 90rem;
-  padding: 0;
 }
 
 .album-tracklist-header {
@@ -938,14 +906,7 @@ div.play-info {
 .album-track-save-btn,
 .album-track-elipsis-btn:hover,
 .album-track-save-btn:hover {
-  padding: 0;
-  background: transparent;
-  border: none;
   color: var(--muted-text);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .album-track-elipsis-btn i,
@@ -960,10 +921,7 @@ div.play-info {
 }
 
 span.album-track-duration {
-  font-size: 1rem;
-  margin: 0;
   text-align: center;
-  color: var(--muted-text);
 }
 
 .spotify-card > h2 {
@@ -973,7 +931,7 @@ span.album-track-duration {
 
 #artist-albums-container {
   align-items: flex-start;
-  margin: 0 2rem 1rem 2rem;
+  margin: 0 1.5rem 1rem 1.5rem;
   box-sizing: border-box;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
@@ -1077,24 +1035,6 @@ div.album-card-info {
   padding: 0;
 }
 
-a.search-title-link {
-  margin: 0;
-  padding: 0;
-  white-space: nowrap;
-  position: relative;
-  text-align: center;
-  color: var(--primary-green);
-  font-size: 2rem;
-  font-weight: bold;
-  text-decoration: none;
-  font-family: 'Segoe UI', sans-serif;
-  display: inline-block;
-}
-
-a.search-title-link:hover {
-  color: var(--hover-green);
-}
-
 .empty-message {
   color: var(--muted-text);
   font-size: 1.2rem;
@@ -1121,10 +1061,6 @@ a.search-title-link:hover {
   z-index: 9999;
 }
 
-.loader.hidden {
-  display: none;
-}
-
 .spinner {
   border: 6px solid #1db954;
   border-top: 6px solid transparent;
@@ -1145,10 +1081,8 @@ a.search-title-link:hover {
 }
 
 button.show-less-more-btn {
-  font-size: 0.9rem;
-  padding: 0;
   margin: 1em 1.3em;
-  background-color: transparent;
+  background: transparent;
   color: var(--muted-text);
   border: none;
   font-weight: bolder;
@@ -1160,6 +1094,15 @@ button.show-less-more-btn:hover {
 }
 
 @media (min-width: 481px) and (max-width: 768px) {
+  .album-hero-info {
+    max-width: calc(100% - 14rem - 2rem);
+  }
+
+  .album-title {
+    margin: 0;
+    line-height: 1;
+  }
+
   .search-results {
     padding: 1rem 2rem;
   }
@@ -1210,17 +1153,8 @@ button.show-less-more-btn:hover {
     padding: 10rem 1.5rem 0.5rem 1.5rem;
   }
 
-  .album-hero-info {
-    width: 100%;
-  }
-
   .track-row img {
     margin: 0;
-  }
-
-  .track-row button.save-btn,
-  .track-row button.save-btn:hover {
-    padding: 0;
   }
 
   .track-row span {
@@ -1279,11 +1213,19 @@ button.show-less-more-btn:hover {
 
   .discography-header {
     font-size: 1.5rem;
-    margin: 2.5rem 2rem 1rem 2rem;
+    margin: 2.5rem 1.5rem 1rem 1.5rem;
   }
 
   .popular-header {
     font-size: 1.5rem;
+  }
+
+  .track-row.artist-track-row {
+    padding: 0.5rem 1.5rem 0.5rem 1rem;
+  }
+
+  .track-row.artist-track-row > *:not(:first-child, :last-child) {
+    margin-right: 0;
   }
 
   .artist-track-row .container-list-number {
@@ -1299,9 +1241,13 @@ button.show-less-more-btn:hover {
     width: 3ch;
   }
 
+  .artist-track-row .save-btn i {
+    opacity: 1;
+  }
+
   .track-row {
     gap: 1rem;
-    padding: 0.5rem 1.5rem;
+    padding: 0.75rem 1.5rem 0.75rem 1rem;
   }
 
   .album-controls {
@@ -1337,11 +1283,11 @@ button.show-less-more-btn:hover {
   .play-btn,
   .artist-hero-img,
   .artist-verified,
-  .artist-track-row .save-btn,
   .artist-followers,
   .album-type,
   a.album-cover-green-play-btn,
-  .artist-hero-img {
+  .artist-hero-img,
+  .artist-wrap {
     display: none;
   }
 }
@@ -1410,11 +1356,6 @@ button.show-less-more-btn:hover {
 
   .album-controls {
     margin: 2rem 0 1.5rem 1.5rem;
-  }
-
-  .track-row button.save-btn,
-  .track-row button.save-btn:hover {
-    padding: 0;
   }
 
   .album-tracklist-container {
@@ -1647,7 +1588,8 @@ button.show-less-more-btn:hover {
   .artist-followers,
   .album-type,
   a.album-cover-green-play-btn,
-  .artist-hero-img {
+  .artist-hero-img,
+  .artist-wrap {
     display: none;
   }
 }
