@@ -156,9 +156,34 @@ const createCommaSeparatedArtists = (artists, className = 'artist') => {
   return container;
 };
 
+const createDotSeparatedArtists = (artists, className = 'artist') => {
+  const container = document.createElement('div');
+  container.style.display = 'inline';
+
+  artists?.forEach((artist, index) => {
+    const artistLink = document.createElement('a');
+    artistLink.textContent = artist.name || 'artist';
+    artistLink.href = artist.id ? `/artist.html?id=${artist.id}` : '#';
+    artistLink.classList.add(className);
+    artistLink.style.whiteSpace = 'nowrap';
+
+    container.appendChild(artistLink);
+
+    if (index < artists.length - 1) {
+      const dot = document.createElement('span');
+      dot.textContent = ' • ';
+      dot.classList.add('artist-meta-separator');
+      container.appendChild(dot);
+    }
+  });
+
+  return container;
+};
+
 const createDotSpacer = () => {
   const dot = document.createElement('span');
   dot.textContent = '•';
+  dot.classList.add('meta-separator');
   return dot;
 };
 
@@ -703,7 +728,7 @@ const createAlbum = (album, tracks) => {
   const albumMeta = document.createElement('div');
   albumMeta.classList.add('album-meta');
 
-  const albumArtistsContainer = createCommaSeparatedArtists(
+  const albumArtistsContainer = createDotSeparatedArtists(
     album.artists,
     'album-artist'
   );
