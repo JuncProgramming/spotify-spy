@@ -50,7 +50,8 @@
   position: relative;
   background: transparent;
   overflow: hidden;
-  z-index: 1;
+  z-index: 0;
+  isolation: isolate;
   border-radius: 1rem;
   background-color: var(--dark-bg);
   box-sizing: border-box;
@@ -230,13 +231,13 @@ h2 {
   justify-content: flex-start;
   align-items: flex-start;
   gap: 3rem;
-  padding: 1rem 0 0 2rem;
+  padding: 1rem 1rem 1rem 2rem;
   box-sizing: border-box;
 }
 
 .track-row.search-track-row {
   gap: 1rem;
-  max-width: 90rem;
+  max-width: 45vw;
   padding: 0.75rem 1.25rem 0.75rem 0.75rem;
   width: 70%;
 }
@@ -250,17 +251,21 @@ h2 {
 }
 
 .track-row .track-info h3,
-.track-row .track-info p {
+.track-row .track-info div {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.track-info .artist-wrap a {
+  display: inline;
 }
 
 .track-row {
   flex-wrap: nowrap;
   padding: 0.25rem 1.5rem 0.25rem 0.25rem;
   position: relative;
-  z-index: 2;
+  z-index: 0;
   display: flex;
   align-items: center;
   border-radius: 0.375rem;
@@ -275,6 +280,18 @@ h2 {
 
 .track-row:hover {
   background: var(--light-bg);
+}
+
+.track-row:hover::before,
+.album-track-row:hover::before {
+  z-index: -1;
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--light-bg);
+  opacity: 0.6;
+  border-radius: inherit;
+  pointer-events: none;
 }
 
 .track-row img {
@@ -652,7 +669,6 @@ i {
 }
 
 .album-title {
-  white-space: normal;
   word-break: break-word;
   font-weight: 900;
   color: #fff;
@@ -660,9 +676,28 @@ i {
   line-height: 1.1;
 }
 
+#album-artists-container {
+  white-space: normal;
+}
+
+.album-meta .meta-separator {
+  margin: 0 0.5ch;
+  white-space: nowrap;
+}
+
+.album-meta .artist-meta-separator {
+  margin: 0;
+  white-space: nowrap;
+  color: var(--light-text);
+}
+
 .album-meta {
-  display: flex;
-  gap: 0.3rem;
+  display: block;
+  max-width: 100%;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.4;
+  font-size: 0.9rem;
   color: var(--muted-text);
 }
 
@@ -684,20 +719,14 @@ i {
 }
 
 .album-btn {
-  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  border: none;
-  outline: none;
-  cursor: pointer;
   border-radius: 50%;
   font-size: 1.2rem;
   line-height: 1;
   width: 2rem;
   height: 2rem;
-  padding: 0;
   margin: 0;
 }
 
@@ -831,7 +860,6 @@ i.fa-clock {
 }
 
 .album-track-row {
-  position: relative;
   padding: 0.25rem 0;
 }
 
@@ -856,10 +884,16 @@ a.album-name.play-info {
   grid-template-columns:
     5rem 1fr 1fr 3rem
     5ch 3rem 0.5rem; /* 0.5rem column acts as a padding */
-  align-items: center;
   justify-content: flex-start;
-  width: 100%;
   max-width: 90rem;
+}
+
+.album-track-row .play-info {
+  margin-left: 1rem;
+}
+
+.album-tracklist-header .album-tracklist-col.plays {
+  margin-left: 1rem;
 }
 
 .album-tracklist-header {
@@ -907,12 +941,6 @@ div.play-info {
 .album-track-elipsis-btn:hover,
 .album-track-save-btn:hover {
   color: var(--muted-text);
-}
-
-.album-track-elipsis-btn i,
-.album-track-save-btn i {
-  opacity: 0;
-  transition: opacity 0.2s ease;
 }
 
 .album-track-row:hover .album-track-elipsis-btn i,
@@ -1009,10 +1037,6 @@ div.album-card-info {
   color: var(--muted-text);
 }
 
-#album-artists-container {
-  display: flex;
-}
-
 #album-artists-container span.comma {
   margin-right: 0.3rem;
 }
@@ -1082,11 +1106,8 @@ div.album-card-info {
 
 button.show-less-more-btn {
   margin: 1em 1.3em;
-  background: transparent;
   color: var(--muted-text);
-  border: none;
   font-weight: bolder;
-  display: block;
 }
 
 button.show-less-more-btn:hover {
@@ -1094,8 +1115,15 @@ button.show-less-more-btn:hover {
 }
 
 @media (min-width: 481px) and (max-width: 768px) {
+  .track-info > * {
+    display: block;
+    max-width: 100%;
+  }
+
   .album-hero-info {
-    max-width: calc(100% - 14rem - 2rem);
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
   }
 
   .album-title {
@@ -1108,18 +1136,12 @@ button.show-less-more-btn:hover {
   }
 
   .track-row.search-track-row {
-    padding: 0.75rem 1.5rem 0.75rem 1rem;
-    gap: 1rem;
     width: 100%;
     max-width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
   }
 
   #tracks-header {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
   }
 
   main {
@@ -1127,22 +1149,8 @@ button.show-less-more-btn:hover {
   }
 
   .album-track-row {
-    display: grid;
     gap: 1.25rem;
     grid-template-columns: minmax(0, 4fr) min-content min-content min-content;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-  }
-
-  .album-tracklist-container {
-    width: 98%;
-    margin: 0 auto 1.5rem auto;
-    position: relative;
-    z-index: 1;
-    padding: 0 1.5rem;
-    box-sizing: border-box;
-    display: block;
   }
 
   .title-container {
@@ -1162,7 +1170,6 @@ button.show-less-more-btn:hover {
   }
 
   .album-meta {
-    word-break: break-word;
     flex-wrap: wrap;
   }
 
@@ -1206,22 +1213,12 @@ button.show-less-more-btn:hover {
     height: 3rem;
   }
 
-  .track-row button.elipsis-btn,
-  .track-row button.elipsis-btn:hover {
-    padding: 0;
-  }
-
   .discography-header {
     font-size: 1.5rem;
-    margin: 2.5rem 1.5rem 1rem 1.5rem;
   }
 
   .popular-header {
     font-size: 1.5rem;
-  }
-
-  .track-row.artist-track-row {
-    padding: 0.5rem 1.5rem 0.5rem 1rem;
   }
 
   .track-row.artist-track-row > *:not(:first-child, :last-child) {
@@ -1246,7 +1243,6 @@ button.show-less-more-btn:hover {
   }
 
   .track-row {
-    gap: 1rem;
     padding: 0.75rem 1.5rem 0.75rem 1rem;
   }
 
@@ -1287,7 +1283,7 @@ button.show-less-more-btn:hover {
   .album-type,
   a.album-cover-green-play-btn,
   .artist-hero-img,
-  .artist-wrap {
+  .artist-track-row .artist-wrap {
     display: none;
   }
 }
@@ -1318,7 +1314,6 @@ button.show-less-more-btn:hover {
   }
 
   .artist-hero-info h1.artist-name {
-    font-size: clamp(2rem, 4vw + 1.5rem, 4rem);
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1361,10 +1356,6 @@ button.show-less-more-btn:hover {
   .album-tracklist-container {
     width: 100%;
     margin: 0 auto 1.5rem;
-    position: relative;
-    z-index: 1;
-    box-sizing: border-box;
-    display: block;
     padding: 0;
   }
 
@@ -1373,28 +1364,18 @@ button.show-less-more-btn:hover {
   }
 
   .track-row.search-track-row {
-    padding: 0.75rem 1.25rem 0.75rem 0.75rem;
     width: 100%;
     max-width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    flex-wrap: nowrap;
   }
 
   .track-row.search-track-row img {
     width: 3rem;
     height: 3rem;
-    flex-shrink: 0;
-    object-fit: cover;
     border-radius: 0.5rem;
-    margin: 0;
   }
 
   .track-info {
     flex: 1 1 auto;
-    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
@@ -1402,9 +1383,6 @@ button.show-less-more-btn:hover {
 
   .track-info > * {
     display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     max-width: 100%;
   }
 
@@ -1428,13 +1406,7 @@ button.show-less-more-btn:hover {
     gap: 0.75rem;
   }
 
-  a.album-card {
-    width: calc(100% - 0.7rem);
-  }
-
   a.album-card.artist-album-card {
-    display: flex;
-    flex-direction: column;
     width: 100%;
     overflow: hidden;
     box-sizing: border-box;
@@ -1466,12 +1438,11 @@ button.show-less-more-btn:hover {
 
   .discography-header {
     font-size: 1.5rem;
-    margin: 2.5rem 2rem 1rem 2rem;
   }
 
   .popular-header {
     font-size: 1.5rem;
-    margin: 1.5rem 2rem 1rem 2rem;
+    margin: 1.5rem 2rem 1rem 1.5rem;
   }
 
   #popular-tracks-container {
@@ -1485,7 +1456,7 @@ button.show-less-more-btn:hover {
   }
 
   .artist-track-row {
-    padding: 0.5rem;
+    padding: 0.5rem 1.25rem 0.5rem 0.5rem;
   }
 
   .artist-track-row .container-list-number {
@@ -1507,13 +1478,10 @@ button.show-less-more-btn:hover {
   }
 
   .album-track-row {
-    padding: 0.5rem 1.5rem 0.5rem 1.5rem;
+    padding: 0.75rem 1.5rem 0.75rem 1.5rem;
     display: grid;
     gap: 1rem;
     grid-template-columns: minmax(0, 4fr) min-content min-content;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
   }
 
   .track-row.album-track-row button.elipsis-btn,
@@ -1589,7 +1557,7 @@ button.show-less-more-btn:hover {
   .album-type,
   a.album-cover-green-play-btn,
   .artist-hero-img,
-  .artist-wrap {
+  .artist-track-row .artist-wrap {
     display: none;
   }
 }
@@ -1612,10 +1580,12 @@ h1.artist-name,
 h1.album-title {
   font-size: clamp(2.75rem, 4vw + 1.5rem, 6rem);
 }
+
 h2,
 .track-info h3 {
   font-size: clamp(1.1rem, 0.2vw + 1rem, 2rem);
 }
+
 .track-info p,
 .album-meta,
 .album-track-duration,
