@@ -1260,6 +1260,10 @@ button.show-less-more-btn:hover {
     margin: 0.5rem 0 1.5rem 2.5rem;
   }
 
+  .artist-track-row {
+    gap: 1rem
+  }
+
   .track-row img {
     width: 4rem;
     height: 4rem;
@@ -1299,6 +1303,10 @@ button.show-less-more-btn:hover {
 }
 
 @media (max-width: 480px) {
+  #artist-albums-container {
+      grid-template-columns: 1fr
+  }
+
   .album-grid {
     grid-template-columns: 1fr;
     gap: 0rem;
