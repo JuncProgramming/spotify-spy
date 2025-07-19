@@ -140,18 +140,23 @@ const onAlbumSaveClick = (saveButton, saveIcon, album) => {
 const createCommaSeparatedArtists = (artists, className = 'artist') => {
   const container = document.createElement('div');
   artists?.forEach((artist, index) => {
+    const artistWrapper = document.createElement('span');
+    artistWrapper.classList.add('artist-wrapper');
+    
     const artistText = document.createElement('a');
     artistText.textContent = artist.name || 'artist';
     artistText.href = artist.id ? `/artist.html?id=${artist.id}` : '#';
     artistText.classList.add(className);
-    container.appendChild(artistText);
+    artistWrapper.appendChild(artistText);
 
     if (index < artists.length - 1) {
       const comma = document.createElement('span');
       comma.classList.add('comma');
       comma.textContent = ',';
-      container.appendChild(comma);
+      artistWrapper.appendChild(comma);
     }
+    
+    container.appendChild(artistWrapper);
   });
   return container;
 };
@@ -238,6 +243,10 @@ const createBestResultCard = (track) => {
   const title = document.createElement('h3');
   title.textContent = track.name || 'track name';
 
+  const titleAndArtistsContainer = document.createElement('div');
+  titleAndArtistsContainer.appendChild(title);
+  titleAndArtistsContainer.appendChild(createCommaSeparatedArtists(track.artists));
+
   bestTrackRow.addEventListener('mouseenter', () => {
     play.classList.remove('animated-out');
     play.classList.add('animated-in');
@@ -249,8 +258,7 @@ const createBestResultCard = (track) => {
   });
 
   play.appendChild(playIcon);
-  info.appendChild(title);
-  info.appendChild(createCommaSeparatedArtists(track.artists));
+  info.appendChild(titleAndArtistsContainer);
   mainContent.appendChild(img);
   mainContent.appendChild(info);
   bestTrackRow.appendChild(mainContent);
